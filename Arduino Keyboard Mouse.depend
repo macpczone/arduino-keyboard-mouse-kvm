@@ -1,0 +1,699 @@
+# depslib dependency file v1.0
+1405498144 source:/root/Projects/avr-libs/bv4242/bv4242.cpp
+	"Arduino.h"
+	"Print.h"
+	"bv4242.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/Arduino.h
+	<stdlib.h>
+	<stdbool.h>
+	<string.h>
+	<math.h>
+	<avr/pgmspace.h>
+	<avr/io.h>
+	<avr/interrupt.h>
+	"binary.h"
+	"WCharacter.h"
+	"WString.h"
+	"HardwareSerial.h"
+	"USBAPI.h"
+	"pins_arduino.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/binary.h
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/WCharacter.h
+	<ctype.h>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/WString.h
+	<stdlib.h>
+	<string.h>
+	<ctype.h>
+	<avr/pgmspace.h>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial.h
+	<inttypes.h>
+	"Stream.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/Stream.h
+	<inttypes.h>
+	"Print.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/Print.h
+	<inttypes.h>
+	<stdio.h>
+	"WString.h"
+	"Printable.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/Printable.h
+	<stdlib.h>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/USBAPI.h
+	<inttypes.h>
+	<avr/pgmspace.h>
+	<avr/eeprom.h>
+	<avr/interrupt.h>
+	<util/delay.h>
+	"Arduino.h"
+	"USBDesc.h"
+	"USBCore.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/USBDesc.h
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/USBCore.h
+	"USBAPI.h"
+
+1502922741 /opt/Arduino/hardware/arduino/avr/variants/promicro/pins_arduino.h
+	<avr/pgmspace.h>
+
+1405498276 /root/Projects/avr-libs/bv4242/bv4242.h
+	"Arduino.h"
+	"Wire.h"
+	"Print.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/libraries/Wire/src/Wire.h
+	<inttypes.h>
+	"Stream.h"
+
+1484342330 source:/root/Projects/avr-libs/SoftPWM/SoftPWM.cpp
+	<avr/io.h>
+	<avr/interrupt.h>
+	"SoftPWM.h"
+	"SoftPWM_timer.h"
+	<Wiring.h>
+	<Arduino.h>
+	<WProgram.h>
+
+1484342330 /root/Projects/avr-libs/SoftPWM/SoftPWM.h
+	<stdint.h>
+
+1484342330 /root/Projects/avr-libs/SoftPWM/SoftPWM_timer.h
+	<avr/io.h>
+	<avr/interrupt.h>
+
+1499772030 source:/root/Projects/avr-libs/TimerOne/TimerOne.cpp
+	"TimerOne.h"
+
+1499772030 /root/Projects/avr-libs/TimerOne/TimerOne.h
+	"Arduino.h"
+	"WProgram.h"
+	"config/known_16bit_timers.h"
+
+1499772030 /root/Projects/avr-libs/TimerOne/config/known_16bit_timers.h
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/HardwareSerial.cpp
+	<HardwareSerial.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial.cpp
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<inttypes.h>
+	"Arduino.h"
+	"HardwareSerial.h"
+	"HardwareSerial_private.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial_private.h
+	"wiring_private.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/wiring_private.h
+	<avr/io.h>
+	<avr/interrupt.h>
+	<stdio.h>
+	<stdarg.h>
+	"Arduino.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/HardwareSerial0.cpp
+	<HardwareSerial.h>
+	<HardwareSerial0.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial0.cpp
+	"Arduino.h"
+	"HardwareSerial.h"
+	"HardwareSerial_private.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/HardwareSerial1.cpp
+	<HardwareSerial.h>
+	<HardwareSerial1.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial1.cpp
+	"Arduino.h"
+	"HardwareSerial.h"
+	"HardwareSerial_private.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/HardwareSerial2.cpp
+	<HardwareSerial.h>
+	<HardwareSerial2.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial2.cpp
+	"Arduino.h"
+	"HardwareSerial.h"
+	"HardwareSerial_private.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/HardwareSerial3.cpp
+	<HardwareSerial.h>
+	<HardwareSerial3.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial3.cpp
+	"Arduino.h"
+	"HardwareSerial.h"
+	"HardwareSerial_private.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/HID.cpp
+	<HID.cpp>
+
+1502751009 /opt/Arduino/hardware/arduino/avr/libraries/HID/src/HID.cpp
+	"HID.h"
+
+1502751009 /opt/Arduino/hardware/arduino/avr/libraries/HID/src/HID.h
+	<stdint.h>
+	<Arduino.h>
+	"PluggableUSB.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/PluggableUSB.h
+	"USBAPI.h"
+	<stdint.h>
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/IPAddress.cpp
+	<IPAddress.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/IPAddress.cpp
+	<Arduino.h>
+	<IPAddress.h>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/IPAddress.h
+	<stdint.h>
+	"Printable.h"
+	"WString.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/main.cpp
+	<main.cpp>
+	<hooks.c>
+	<abi.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/main.cpp
+	<Arduino.h>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/hooks.c
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/abi.cpp
+	<stdlib.h>
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/new.cpp
+	<new.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/new.cpp
+	<stdlib.h>
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/Print.cpp
+	<Print.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/Print.cpp
+	<stdlib.h>
+	<stdio.h>
+	<string.h>
+	<math.h>
+	"Arduino.h"
+	"Print.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/Stream.cpp
+	<Stream.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/Stream.cpp
+	"Arduino.h"
+	"Stream.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/Tone.cpp
+	<Tone.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/Tone.cpp
+	<avr/interrupt.h>
+	<avr/pgmspace.h>
+	"Arduino.h"
+	"pins_arduino.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/WInterrupts.c
+	<WInterrupts.c>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/WInterrupts.c
+	<inttypes.h>
+	<avr/io.h>
+	<avr/interrupt.h>
+	<avr/pgmspace.h>
+	<stdio.h>
+	"wiring_private.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/wiring.c
+	<wiring.c>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/wiring.c
+	"wiring_private.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/wiring_analog.c
+	<wiring_analog.c>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/wiring_analog.c
+	"wiring_private.h"
+	"pins_arduino.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/wiring_digital.c
+	<wiring_digital.c>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/wiring_digital.c
+	"wiring_private.h"
+	"pins_arduino.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/wiring_pulse.c
+	<wiring_pulse.c>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/wiring_pulse.c
+	"wiring_private.h"
+	"pins_arduino.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/wiring_pulse_asm.S
+	<wiring_pulse.S>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/wiring_pulse.S
+	<avr/io.h>
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/wiring_shift.c
+	<wiring_shift.c>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/wiring_shift.c
+	"wiring_private.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/WMath.cpp
+	<WMath.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/WMath.cpp
+	"stdlib.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/WString.cpp
+	<WString.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/WString.cpp
+	"WString.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/libraries/libraries.cpp
+	<Arduino.h>
+	"Dhcp.cpp"
+	"Dns.cpp"
+	"Ethernet.cpp"
+	"EthernetClient.cpp"
+	"EthernetServer.cpp"
+	"EthernetUdp.cpp"
+	"socket.cpp"
+	"w5100.cpp"
+	"LiquidCrystal.cpp"
+	"SD.cpp"
+	"Sd2Card.cpp"
+	"SdFile.cpp"
+	"SdVolume.cpp"
+	"File.cpp"
+	"Servo.cpp"
+	"SoftwareSerial.cpp"
+	"SPI.cpp"
+	"Stepper.cpp"
+	"Wire.cpp"
+	"twi.c"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/Dhcp.cpp
+	"utility/w5100.h"
+	<string.h>
+	<stdlib.h>
+	"Dhcp.h"
+	"Arduino.h"
+	"utility/util.h"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/utility/w5100.h
+	<SPI.h>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/libraries/SPI/src/SPI.h
+	<Arduino.h>
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/Dhcp.h
+	"EthernetUdp.h"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/EthernetUdp.h
+	<Udp.h>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/Udp.h
+	<Stream.h>
+	<IPAddress.h>
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/utility/util.h
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/Dns.cpp
+	"utility/w5100.h"
+	"EthernetUdp.h"
+	"utility/util.h"
+	"Dns.h"
+	<string.h>
+	"Arduino.h"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/Dns.h
+	<EthernetUdp.h>
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/Ethernet.cpp
+	"utility/w5100.h"
+	"Ethernet.h"
+	"Dhcp.h"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/Ethernet.h
+	<inttypes.h>
+	"IPAddress.h"
+	"EthernetClient.h"
+	"EthernetServer.h"
+	"Dhcp.h"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/EthernetClient.h
+	"Arduino.h"
+	"Print.h"
+	"Client.h"
+	"IPAddress.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/Client.h
+	"Print.h"
+	"Stream.h"
+	"IPAddress.h"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/EthernetServer.h
+	"Server.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/Server.h
+	"Print.h"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/EthernetClient.cpp
+	"utility/w5100.h"
+	"utility/socket.h"
+	"string.h"
+	"Arduino.h"
+	"Ethernet.h"
+	"EthernetClient.h"
+	"EthernetServer.h"
+	"Dns.h"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/utility/socket.h
+	"utility/w5100.h"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/EthernetServer.cpp
+	"utility/w5100.h"
+	"utility/socket.h"
+	"string.h"
+	"Ethernet.h"
+	"EthernetClient.h"
+	"EthernetServer.h"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/EthernetUdp.cpp
+	"utility/w5100.h"
+	"utility/socket.h"
+	"Ethernet.h"
+	"Udp.h"
+	"Dns.h"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/utility/socket.cpp
+	"w5100.h"
+	"socket.h"
+
+1462869367 /opt/Arduino/libraries/Ethernet/src/utility/w5100.cpp
+	<stdio.h>
+	<string.h>
+	"w5100.h"
+
+1462869367 /opt/Arduino/libraries/LiquidCrystal/src/LiquidCrystal.cpp
+	"LiquidCrystal.h"
+	<stdio.h>
+	<string.h>
+	<inttypes.h>
+	"Arduino.h"
+
+1462869367 /opt/Arduino/libraries/LiquidCrystal/src/LiquidCrystal.h
+	<inttypes.h>
+	"Print.h"
+
+1462869367 /opt/Arduino/libraries/SD/src/SD.cpp
+	"SD.h"
+
+1462869367 /opt/Arduino/libraries/SD/src/SD.h
+	<Arduino.h>
+	<utility/SdFat.h>
+	<utility/SdFatUtil.h>
+
+1462869367 /opt/Arduino/libraries/SD/src/utility/SdFat.h
+	<avr/pgmspace.h>
+	"Sd2Card.h"
+	"FatStructs.h"
+	"Print.h"
+
+1462869367 /opt/Arduino/libraries/SD/src/utility/Sd2Card.h
+	"Sd2PinMap.h"
+	"SdInfo.h"
+	<Arduino.h>
+
+1462869367 /opt/Arduino/libraries/SD/src/utility/Sd2PinMap.h
+	<Arduino.h>
+	<avr/io.h>
+
+1462869367 /opt/Arduino/libraries/SD/src/utility/SdInfo.h
+	<stdint.h>
+
+1462869367 /opt/Arduino/libraries/SD/src/utility/FatStructs.h
+
+1462869367 /opt/Arduino/libraries/SD/src/utility/SdFatUtil.h
+	<Arduino.h>
+	<avr/pgmspace.h>
+
+1462869367 /opt/Arduino/libraries/SD/src/utility/Sd2Card.cpp
+	<Arduino.h>
+	"Sd2Card.h"
+	<SPI.h>
+
+1462869367 /opt/Arduino/libraries/SD/src/utility/SdFile.cpp
+	"SdFat.h"
+	<avr/pgmspace.h>
+	<Arduino.h>
+
+1462869367 /opt/Arduino/libraries/SD/src/utility/SdVolume.cpp
+	"SdFat.h"
+
+1462869367 /opt/Arduino/libraries/SD/src/File.cpp
+	<SD.h>
+
+1462869367 /opt/Arduino/libraries/Servo/src/avr/Servo.cpp
+	<avr/interrupt.h>
+	<Arduino.h>
+	"Servo.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src/SoftwareSerial.cpp
+	<avr/interrupt.h>
+	<avr/pgmspace.h>
+	<Arduino.h>
+	<SoftwareSerial.h>
+	<util/delay_basic.h>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src/SoftwareSerial.h
+	<inttypes.h>
+	<Stream.h>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/libraries/SPI/src/SPI.cpp
+	"SPI.h"
+
+1462869367 /opt/Arduino/libraries/Stepper/src/Stepper.cpp
+	"Arduino.h"
+	"Stepper.h"
+
+1462869367 /opt/Arduino/libraries/Stepper/src/Stepper.h
+
+1462869367 /opt/Arduino/hardware/arduino/avr/libraries/Wire/src/Wire.cpp
+	<stdlib.h>
+	<string.h>
+	<inttypes.h>
+	"utility/twi.h"
+	"Wire.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/libraries/Wire/src/utility/twi.h
+	<inttypes.h>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/libraries/Wire/src/utility/twi.c
+	<math.h>
+	<stdlib.h>
+	<inttypes.h>
+	<avr/io.h>
+	<avr/interrupt.h>
+	<compat/twi.h>
+	"Arduino.h"
+	"pins_arduino.h"
+	"twi.h"
+
+1503975687 source:/root/Projects/Arduino Keyboard Mouse/sketch.cpp
+	<Arduino.h>
+	<SoftwareSerial.h>
+	"KeyboardioHID.h"
+	<SoftPWM.h>
+	<TimerOne.h>
+	<Wire.h>
+	<LiquidCrystal_I2C.h>
+	<Servo.h>
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/KeyboardioHID.h
+	"LEDs.h"
+	"MultiReport/AbsoluteMouse.h"
+	"MultiReport/Mouse.h"
+	"MultiReport/ConsumerControl.h"
+	"MultiReport/Gamepad.h"
+	"MultiReport/SystemControl.h"
+	"MultiReport/Keyboard.h"
+	"BootKeyboard/BootKeyboard.h"
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/LEDs.h
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/MultiReport/AbsoluteMouse.h
+	<Arduino.h>
+	"PluggableUSB.h"
+	"HID.h"
+	"HID-Settings.h"
+	"MouseButtons.h"
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/HID-Settings.h
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/MultiReport/MouseButtons.h
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/MultiReport/Mouse.h
+	<Arduino.h>
+	"PluggableUSB.h"
+	"HID.h"
+	"HID-Settings.h"
+	"MouseButtons.h"
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/MultiReport/ConsumerControl.h
+	<Arduino.h>
+	"PluggableUSB.h"
+	"HID.h"
+	"HID-Settings.h"
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/MultiReport/Gamepad.h
+	<Arduino.h>
+	"PluggableUSB.h"
+	"HID.h"
+	"HID-Settings.h"
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/MultiReport/SystemControl.h
+	<Arduino.h>
+	"PluggableUSB.h"
+	"HID.h"
+	"HID-Settings.h"
+	"HIDTables.h"
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/HIDTables.h
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/MultiReport/Keyboard.h
+	<Arduino.h>
+	"PluggableUSB.h"
+	"HID.h"
+	"HID-Settings.h"
+	"HIDTables.h"
+	"HIDAliases.h"
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/HIDAliases.h
+	"HIDTables.h"
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/BootKeyboard/BootKeyboard.h
+	<Arduino.h>
+	"PluggableUSB.h"
+	"HID.h"
+	"HID-Settings.h"
+	"HIDTables.h"
+	"HIDAliases.h"
+
+1496555058 source:/root/Projects/avr-libs/KeyboardioHID/src/BootKeyboard/BootKeyboard.cpp
+	"BootKeyboard.h"
+
+1462869367 /opt/Arduino/hardware/arduino/avr/libraries/HID_old/HID.h
+	<stdint.h>
+	<Arduino.h>
+	"PluggableUSB.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/CDC.cpp
+	<CDC.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/CDC.cpp
+	"USBAPI.h"
+	<avr/wdt.h>
+	<util/atomic.h>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/libraries/HID_old/HID.cpp
+	"HID.h"
+
+1502880385 source:/root/Projects/Arduino Keyboard Mouse/cores/USBCore.cpp
+	<USBCore.cpp>
+	<PluggableUSB.cpp>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/USBCore.cpp
+	"USBAPI.h"
+	"PluggableUSB.h"
+	<stdlib.h>
+
+1462869367 /opt/Arduino/hardware/arduino/avr/cores/arduino/PluggableUSB.cpp
+	"USBAPI.h"
+	"PluggableUSB.h"
+
+1433963806 /root/Projects/avr-libs/NewliquidCrystal/LiquidCrystal_I2C.h
+	<inttypes.h>
+	<Print.h>
+	"I2CIO.h"
+	"LCD.h"
+
+1433963806 /root/Projects/avr-libs/NewliquidCrystal/I2CIO.h
+	<inttypes.h>
+
+1433963806 /root/Projects/avr-libs/NewliquidCrystal/LCD.h
+	<WProgram.h>
+	<Arduino.h>
+	<avr/pgmspace.h>
+	<inttypes.h>
+	<Print.h>
+
+1442274249 source:/root/Projects/avr-libs/NewliquidCrystal/LCD.cpp
+	<stdio.h>
+	<string.h>
+	<inttypes.h>
+	<WProgram.h>
+	<Arduino.h>
+	"LCD.h"
+
+1433963806 source:/root/Projects/avr-libs/NewliquidCrystal/LiquidCrystal_I2C.cpp
+	<WProgram.h>
+	<Arduino.h>
+	<inttypes.h>
+	"I2CIO.h"
+	"LiquidCrystal_I2C.h"
+
+1442748655 source:/root/Projects/avr-libs/NewliquidCrystal/I2CIO.cpp
+	<WProgram.h>
+	<Arduino.h>
+	<../Wire/Wire.h>
+	<Wire.h>
+	<inttypes.h>
+	"I2CIO.h"
+
+1433963806 source:/root/Projects/avr-libs/NewliquidCrystal/FastIO.cpp
+	"FastIO.h"
+
+1443891236 /root/Projects/avr-libs/NewliquidCrystal/FastIO.h
+	<WProgram.h>
+	<Arduino.h>
+	<pins_arduino.h>
+	<inttypes.h>
+	<util/atomic.h>
+
+1462869367 /opt/Arduino/libraries/Servo/src/Servo.h
+	<inttypes.h>
+	"avr/ServoTimers.h"
+	"sam/ServoTimers.h"
+	"samd/ServoTimers.h"
+
+1462869367 /opt/Arduino/libraries/Servo/src/avr/ServoTimers.h
+
+1462869367 /opt/Arduino/libraries/Servo/src/sam/ServoTimers.h
+
+1462869367 /opt/Arduino/libraries/Servo/src/samd/ServoTimers.h
+

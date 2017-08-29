@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Arduino Keyboard Mouse" />
+		<Option pch_mode="2" />
+		<Option compiler="avr-gcc" />
+		<Build>
+			<Target title="Arduino Pro Micro">
+				<Option output="bin/promicro/Arduino Keyboard Mouse.elf" prefix_auto="1" extension_auto="0" />
+				<Option object_output=".objs/promicro" />
+				<Option type="1" />
+				<Option compiler="avr-gcc" />
+				<Compiler>
+					<Add option="-Os" />
+					<Add option="-mmcu=$(MCU)" />
+					<Add option="-DF_CPU=16000000L" />
+					<Add option="-D__AVR_ATmega32U4__" />
+					<Add option="-DUSB_VID=0x1B4F" />
+					<Add option="-DUSB_PID=0x9206" />
+					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/cores/arduino" />
+					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/variants/promicro" />
+					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/HID/src" />
+					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/SPI/src" />
+					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/SoftwareSerial/src" />
+					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/Wire/src" />
+					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/Wire/src/utility" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-mmcu=$(MCU)" />
+					<Add option="-lm" />
+				</Linker>
+				<ExtraCommands>
+					<Add after='avr-objcopy -O ihex -R .eeprom -R .eesafe &quot;$(TARGET_OUTPUT_FILE)&quot; &quot;$(TARGET_OUTPUT_FILE).hex&quot;' />
+					<Add after='avr-objcopy --no-change-warnings -j .eeprom --change-section-lma .eeprom=0 -O ihex &quot;$(TARGET_OUTPUT_FILE)&quot; &quot;$(TARGET_OUTPUT_FILE).eep.hex&quot;' />
+					<Add after='avr-size &quot;$(TARGET_OUTPUT_FILE)&quot;' />
+					<Add after='avr-objdump -h -S &quot;$(TARGET_OUTPUT_FILE)&quot; &gt; &quot;$(TARGET_OUTPUT_FILE).lss&quot;' />
+					<Add after="stty -F ${UPLOAD_PORT} 1200" />
+					<Add after="sleep 2" />
+					<Add after='/usr/local/avr/bin/avrdude -V -C /usr/local/avr/etc/avrdude.conf -p${MCU} -cavr109 -P${UPLOAD_PORT} -b${UPLOAD_BAUDRATE} -D &quot;-Uflash:w:${TARGET_OUTPUT_DIR}${TARGET_OUTPUT_BASENAME}.elf.hex:i&quot;' />
+				</ExtraCommands>
+				<Environment>
+					<Variable name="ARDUINO_DIR" value="$(#arduino)" />
+					<Variable name="BOARD" value="Arduino Pro Micro" />
+					<Variable name="BOARD_ID" value="promicro" />
+					<Variable name="MCU" value="atmega32u4" />
+					<Variable name="UPLOAD_BAUDRATE" value="57600" />
+					<Variable name="UPLOAD_PORT" value="/dev/ttyACM0" />
+				</Environment>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=c++11" />
+			<Add option="-fno-exceptions" />
+			<Add option="-ffunction-sections" />
+			<Add option="-fdata-sections" />
+			<Add option="-s" />
+			<Add option="-fno-threadsafe-statics" />
+			<Add option="-DARDUINO=10609" />
+			<Add option="-DARDUINO_ARCH_AVR=1" />
+			<Add option="-DUSE_ETHERNET=0" />
+			<Add option="-DUSE_LCD=0" />
+			<Add option="-DUSE_SD=0" />
+			<Add option="-DUSE_SERVO=1" />
+			<Add option="-DUSE_SOFTSERIAL=1" />
+			<Add option="-DUSE_SPI=0" />
+			<Add option="-DUSE_STEPPER=0" />
+			<Add option="-DUSE_WIRE=1" />
+			<Add directory="$(ARDUINO_DIR)/libraries/Ethernet/src" />
+			<Add directory="$(ARDUINO_DIR)/libraries/Ethernet/src/utility" />
+			<Add directory="$(ARDUINO_DIR)/libraries/LiquidCrystal/src" />
+			<Add directory="$(ARDUINO_DIR)/libraries/SD/src" />
+			<Add directory="$(ARDUINO_DIR)/libraries/SD/src/utility" />
+			<Add directory="$(ARDUINO_DIR)/libraries/Servo/src/avr" />
+			<Add directory="$(ARDUINO_DIR)/libraries/Stepper/src" />
+			<Add directory="../avr-libs/KeyboardioHID/src" />
+			<Add directory="../avr-libs/NewliquidCrystal" />
+			<Add directory="../avr-libs/SoftPWM" />
+			<Add directory="../avr-libs/TimerOne" />
+			<Add directory="$(ARDUINO_DIR)/libraries/Servo/src" />
+		</Compiler>
+		<Linker>
+			<Add option="-Wl,--gc-sections" />
+		</Linker>
+		<Unit filename="../avr-libs/KeyboardioHID/src/BootKeyboard/BootKeyboard.cpp" />
+		<Unit filename="../avr-libs/NewliquidCrystal/FastIO.cpp" />
+		<Unit filename="../avr-libs/NewliquidCrystal/I2CIO.cpp" />
+		<Unit filename="../avr-libs/NewliquidCrystal/LCD.cpp" />
+		<Unit filename="../avr-libs/NewliquidCrystal/LiquidCrystal_I2C.cpp" />
+		<Unit filename="../avr-libs/SoftPWM/SoftPWM.cpp" />
+		<Unit filename="../avr-libs/TimerOne/TimerOne.cpp" />
+		<Unit filename="cores/CDC.cpp" />
+		<Unit filename="cores/HID.cpp" />
+		<Unit filename="cores/HardwareSerial.cpp" />
+		<Unit filename="cores/HardwareSerial0.cpp" />
+		<Unit filename="cores/HardwareSerial1.cpp" />
+		<Unit filename="cores/HardwareSerial2.cpp" />
+		<Unit filename="cores/HardwareSerial3.cpp" />
+		<Unit filename="cores/IPAddress.cpp" />
+		<Unit filename="cores/Print.cpp" />
+		<Unit filename="cores/Stream.cpp" />
+		<Unit filename="cores/Tone.cpp" />
+		<Unit filename="cores/USBCore.cpp" />
+		<Unit filename="cores/WInterrupts.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cores/WMath.cpp" />
+		<Unit filename="cores/WString.cpp" />
+		<Unit filename="cores/main.cpp" />
+		<Unit filename="cores/new.cpp" />
+		<Unit filename="cores/wiring.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cores/wiring_analog.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cores/wiring_digital.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cores/wiring_pulse.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="cores/wiring_pulse_asm.S" />
+		<Unit filename="cores/wiring_shift.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="libraries/libraries.cpp" />
+		<Unit filename="sketch.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
