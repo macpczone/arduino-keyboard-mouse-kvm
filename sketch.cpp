@@ -243,14 +243,6 @@ void printkey (void){
 }
 
 void loop(){
-	for (byte i = 1; i < 255; i++){
-		BootKeyboard.press(i);
-		BootKeyboard.sendReport();
-		delay(200);
-		BootKeyboard.release(i);
-		BootKeyboard.sendReport();
-		delay(200);
-	}
 
   if (mySerial.available())
   {
