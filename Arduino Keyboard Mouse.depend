@@ -524,7 +524,7 @@
 	"pins_arduino.h"
 	"twi.h"
 
-1503975687 source:/root/Projects/Arduino Keyboard Mouse/sketch.cpp
+1504389065 source:/root/Projects/Arduino Keyboard Mouse/sketch.cpp
 	<Arduino.h>
 	<SoftwareSerial.h>
 	"KeyboardioHID.h"
@@ -533,6 +533,8 @@
 	<Wire.h>
 	<LiquidCrystal_I2C.h>
 	<Servo.h>
+	<keysims.h>
+	<EEPROM.h>
 
 1496555058 /root/Projects/avr-libs/KeyboardioHID/src/KeyboardioHID.h
 	"LEDs.h"
@@ -691,9 +693,16 @@
 	"sam/ServoTimers.h"
 	"samd/ServoTimers.h"
 
-1462869367 /opt/Arduino/libraries/Servo/src/avr/ServoTimers.h
+1503979489 /opt/Arduino/libraries/Servo/src/avr/ServoTimers.h
 
 1462869367 /opt/Arduino/libraries/Servo/src/sam/ServoTimers.h
 
 1462869367 /opt/Arduino/libraries/Servo/src/samd/ServoTimers.h
+
+1504104874 /root/Projects/avr-libs/keysims.h
+
+1462869367 /opt/Arduino/hardware/arduino/avr/libraries/EEPROM/src/EEPROM.h
+	<inttypes.h>
+	<avr/eeprom.h>
+	<avr/io.h>
 

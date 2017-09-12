@@ -25,6 +25,7 @@
 					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/SoftwareSerial/src" />
 					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/Wire/src" />
 					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/Wire/src/utility" />
+					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/EEPROM/src" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -80,6 +81,7 @@
 			<Add directory="../avr-libs/SoftPWM" />
 			<Add directory="../avr-libs/TimerOne" />
 			<Add directory="$(ARDUINO_DIR)/libraries/Servo/src" />
+			<Add directory="../avr-libs" />
 		</Compiler>
 		<Linker>
 			<Add option="-Wl,--gc-sections" />
@@ -91,6 +93,7 @@
 		<Unit filename="../avr-libs/NewliquidCrystal/LiquidCrystal_I2C.cpp" />
 		<Unit filename="../avr-libs/SoftPWM/SoftPWM.cpp" />
 		<Unit filename="../avr-libs/TimerOne/TimerOne.cpp" />
+		<Unit filename="../avr-libs/keysims.h" />
 		<Unit filename="cores/CDC.cpp" />
 		<Unit filename="cores/HID.cpp" />
 		<Unit filename="cores/HardwareSerial.cpp" />
@@ -101,7 +104,6 @@
 		<Unit filename="cores/IPAddress.cpp" />
 		<Unit filename="cores/Print.cpp" />
 		<Unit filename="cores/Stream.cpp" />
-		<Unit filename="cores/Tone.cpp" />
 		<Unit filename="cores/USBCore.cpp" />
 		<Unit filename="cores/WInterrupts.c">
 			<Option compilerVar="CC" />
