@@ -1,1 +1,2 @@
 /.objs/*
+/bin/promicro/avrdude-command.text

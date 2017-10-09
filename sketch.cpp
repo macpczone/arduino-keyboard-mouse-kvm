@@ -32,6 +32,8 @@ SoftwareSerial mySerial(9, 10); // RX, TX
 bool press=true;
 const int led = LED_BUILTIN_RX;  // the pin with a LED
 const int keyled = 5;  // the pin with a LED
+const int servopin1 = 7;
+const int servopin2 = 14;
 void blinkLED(void);
 LiquidCrystal_I2C ui(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 char text[6];
@@ -101,8 +103,8 @@ void setup()
 
     // Set fade time for pin 13 to 100 ms fade-up time, and 500 ms fade-down time
     SoftPWMSetFadeTime(led, 300, 600);
-    myservoa.attach(7);  // attaches the servo on pin 9 to the servo object
-    myservob.attach(14);
+    myservoa.attach(servopin1);  // attaches the servo on pin 9 to the servo object
+    myservob.attach(servopin2);
     myservoa.write(0);              // tell servo to go to position in variable 'pos'
     myservob.write(0);
     delay(1000);
@@ -136,6 +138,10 @@ int poweron = 0;
 int rservo = 0;
 int pservo = 0;
 int rightshift = 0;
+int mousemove = 40;
+int mousebiginc = 100;
+int mousesmallinc = 5;
+int mousemext;
 
 void blinkLED(void)
 {
@@ -237,7 +243,7 @@ void upcheck(byte k)
         BootKeyboard.press(HID_KEYBOARD_LEFT_ALT);
         BootKeyboard.sendReport();
         delay(100);
-        BootKeyboard.press(HID_KEYBOARD_DELETE);
+        BootKeyboard.press(HID_KEYBOARD_DELETE_FORWARD);
         BootKeyboard.sendReport();
         delay(100);
         BootKeyboard.releaseAll();
@@ -279,7 +285,6 @@ void upcheck(byte k)
         Mouse.end();
         Keyboard.begin();
         ui.clear(); // display
-        ui.lcd_mode(0); // dual ht
         ui.print(F("Keyboard mode"));
         ui.setCursor(0, 2);
         ui.print(F("enabled"));
@@ -293,7 +298,6 @@ void upcheck(byte k)
         Keyboard.end();
         Mouse.begin();
         ui.clear(); // display
-        ui.lcd_mode(0); // dual ht
         ui.print(F("Mouse mode"));
         ui.setCursor(0, 2);
         ui.print(F("enabled"));
@@ -329,6 +333,8 @@ void upcheck(byte k)
         ui.print(F("Servo adjust mode"));
         ui.setCursor(0, 1);
         ui.print(F("disabled."));
+        myservoa.attach(servopin1);  // attaches the servo on pin 9 to the servo object
+        myservob.attach(servopin2);
         myservoa.write(0);              // tell servo to go to position in variable 'pos'
         myservob.write(0);              // tell servo to go to position in variable 'pos'
         delay(1000);
@@ -490,25 +496,26 @@ void loop()
                     }
                 } else {
 #if USE_MOUSE
+                    mousemext = remember1 * (mousebiginc - mousemove) - remember4 * (mousemove - mousesmallinc);
                     switch (k) {
                     case 218:
                         // move mouse up
-                        Mouse.move(0, -40);
+                        Mouse.move(0, -40 - mousemext);
                         ui.print(F("Mouse up"));
                         break;
                     case 217:
                         // move mouse down
-                        Mouse.move(0, 40);
+                        Mouse.move(0, 40 + mousemext);
                         ui.print(F("Mouse down"));
                         break;
                     case 216:
                         // move mouse left
-                        Mouse.move(-40, 0);
+                        Mouse.move(-40 - mousemext, 0);
                         ui.print(F("Mouse left"));
                         break;
                     case 215:
                         // move mouse right
-                        Mouse.move(40, 0);
+                        Mouse.move(40 + mousemext, 0);
                         ui.print(F("Mouse right"));
                         break;
                     case 32:
@@ -516,8 +523,8 @@ void loop()
                         Mouse.click(MOUSE_LEFT);
                         ui.print(F("Click left"));
                         break;
-                    case 130:
-                        // perform mouse left click
+                    case 134:
+                        // perform mouse right click
                         Mouse.click(MOUSE_RIGHT);
                         ui.print(F("Click right"));
                         break;
