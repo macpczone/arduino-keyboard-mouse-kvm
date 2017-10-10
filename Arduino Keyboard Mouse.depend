@@ -524,7 +524,7 @@
 	"pins_arduino.h"
 	"twi.h"
 
-1504389065 source:/root/Projects/Arduino Keyboard Mouse/sketch.cpp
+1507590445 source:/root/Projects/Arduino Keyboard Mouse/sketch.cpp
 	<Arduino.h>
 	<SoftwareSerial.h>
 	"KeyboardioHID.h"
@@ -699,10 +699,16 @@
 
 1462869367 /opt/Arduino/libraries/Servo/src/samd/ServoTimers.h
 
-1504104874 /root/Projects/avr-libs/keysims.h
+1504458930 /root/Projects/avr-libs/keysims.h
 
 1462869367 /opt/Arduino/hardware/arduino/avr/libraries/EEPROM/src/EEPROM.h
 	<inttypes.h>
 	<avr/eeprom.h>
 	<avr/io.h>
+
+1496555058 source:/root/Projects/avr-libs/KeyboardioHID/src/MultiReport/Mouse.cpp
+	"Mouse.h"
+	"DescriptorPrimitives.h"
+
+1496555058 /root/Projects/avr-libs/KeyboardioHID/src/DescriptorPrimitives.h
 

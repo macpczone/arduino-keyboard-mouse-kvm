@@ -69,6 +69,7 @@
 			<Add option="-DUSE_SPI=0" />
 			<Add option="-DUSE_STEPPER=0" />
 			<Add option="-DUSE_WIRE=1" />
+			<Add option="-DUSE_MOUSE=1" />
 			<Add directory="$(ARDUINO_DIR)/libraries/Ethernet/src" />
 			<Add directory="$(ARDUINO_DIR)/libraries/Ethernet/src/utility" />
 			<Add directory="$(ARDUINO_DIR)/libraries/LiquidCrystal/src" />
@@ -87,6 +88,7 @@
 			<Add option="-Wl,--gc-sections" />
 		</Linker>
 		<Unit filename="../avr-libs/KeyboardioHID/src/BootKeyboard/BootKeyboard.cpp" />
+		<Unit filename="../avr-libs/KeyboardioHID/src/MultiReport/Mouse.cpp" />
 		<Unit filename="../avr-libs/NewliquidCrystal/FastIO.cpp" />
 		<Unit filename="../avr-libs/NewliquidCrystal/I2CIO.cpp" />
 		<Unit filename="../avr-libs/NewliquidCrystal/LCD.cpp" />

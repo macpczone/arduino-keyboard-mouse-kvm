@@ -283,7 +283,7 @@ void upcheck(byte k)
     if (remember1 == 0 && remember4 == 0 && remember5 == 0 && gokeyboard == 1) {
         gokeyboard = 0;
         Mouse.end();
-        Keyboard.begin();
+        BootKeyboard.begin();
         ui.clear(); // display
         ui.print(F("Keyboard mode"));
         ui.setCursor(0, 2);
@@ -295,7 +295,7 @@ void upcheck(byte k)
     }
     if (remember1 == 0 && remember4 == 0 && remember6 == 0 && gomouse == 1) {
         gomouse = 0;
-        Keyboard.end();
+        BootKeyboard.end();
         Mouse.begin();
         ui.clear(); // display
         ui.print(F("Mouse mode"));
@@ -319,7 +319,7 @@ void upcheck(byte k)
         ui.setCursor(0, 2);
         ui.print(F("keys to move and"));
         ui.setCursor(0, 3);
-        ui.print(F("Space bar to set"));
+        ui.print(F("Space bar to set."));
     }
     if (k == 53) {
         remember8 = 0;
@@ -497,6 +497,7 @@ void loop()
                 } else {
 #if USE_MOUSE
                     mousemext = remember1 * (mousebiginc - mousemove) - remember4 * (mousemove - mousesmallinc);
+                    ui.clear(); // display
                     switch (k) {
                     case 218:
                         // move mouse up
