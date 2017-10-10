@@ -17,7 +17,7 @@
 
  */
 #include <SoftwareSerial.h>
-#include "KeyboardioHID.h"
+#include "HID-Project.h"
 #include <SoftPWM.h>
 #include <TimerOne.h>
 #include <Wire.h>
@@ -238,16 +238,12 @@ void upcheck(byte k)
     if (remember1 == 0 && remember2 == 0 && remember3 == 0 && sendit == 1) {
         sendit = 0;
         BootKeyboard.press(HID_KEYBOARD_LEFT_CONTROL);
-        BootKeyboard.sendReport();
         delay(100);
         BootKeyboard.press(HID_KEYBOARD_LEFT_ALT);
-        BootKeyboard.sendReport();
         delay(100);
         BootKeyboard.press(HID_KEYBOARD_DELETE_FORWARD);
-        BootKeyboard.sendReport();
         delay(100);
         BootKeyboard.releaseAll();
-        BootKeyboard.sendReport();
         ui.clear(); // display
 //						ui.lcd_mode(0); // dual ht
         ui.print(F("Sent"));
@@ -420,7 +416,6 @@ void loop()
                     itoa(k, text, 10);
                     ui.print(String(text) + String(' '));
                     BootKeyboard.press(pgm_read_byte(&keysims[k]));
-                    BootKeyboard.sendReport();
                     //mySerial.println(" pressed");
                 } else if (servoadj == 1) {
                     switch (k) {
@@ -540,7 +535,6 @@ void loop()
                     itoa(k, text, 10);
                     ui.print(String(text) + String(' '));
                     BootKeyboard.release(pgm_read_byte(&keysims[k]));
-                    BootKeyboard.sendReport();
                 } else {
                 }
                 upcheck(k);

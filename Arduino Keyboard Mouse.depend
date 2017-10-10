@@ -712,3 +712,56 @@
 
 1496555058 /root/Projects/avr-libs/KeyboardioHID/src/DescriptorPrimitives.h
 
+1485516394 source:/root/Projects/avr-libs/HID/src/MultiReport/ImprovedMouse.cpp
+	"ImprovedMouse.h"
+
+1485516394 /root/Projects/avr-libs/HID/src/MultiReport/ImprovedMouse.h
+	<Arduino.h>
+	"PluggableUSB.h"
+	"HID.h"
+	"HID-Settings.h"
+	"../HID-APIs/MouseAPI.h"
+
+1485516394 /root/Projects/avr-libs/HID/src/HID-Settings.h
+
+1485516394 /root/Projects/avr-libs/HID/src/HID-APIs/MouseAPI.h
+	<Arduino.h>
+	"HID-Settings.h"
+	"MouseAPI.hpp"
+
+1485516394 /root/Projects/avr-libs/HID/src/HID-APIs/MouseAPI.hpp
+
+1485516394 source:/root/Projects/avr-libs/HID/src/SingleReport/BootKeyboard.cpp
+	"BootKeyboard.h"
+
+1485516394 /root/Projects/avr-libs/HID/src/SingleReport/BootKeyboard.h
+	<Arduino.h>
+	"PluggableUSB.h"
+	"HID.h"
+	"HID-Settings.h"
+	"../HID-APIs/DefaultKeyboardAPI.h"
+
+1485516394 /root/Projects/avr-libs/HID/src/HID-APIs/DefaultKeyboardAPI.h
+	"KeyboardAPI.h"
+	"ConsumerAPI.h"
+	"DefaultKeyboardAPI.hpp"
+
+1485516394 /root/Projects/avr-libs/HID/src/HID-APIs/KeyboardAPI.h
+	<Arduino.h>
+	"HID-Settings.h"
+	"ImprovedKeylayouts.h"
+	"KeyboardAPI.hpp"
+
+1485516394 /root/Projects/avr-libs/HID/src/HID-APIs/ImprovedKeylayouts.h
+
+1485516394 /root/Projects/avr-libs/HID/src/HID-APIs/KeyboardAPI.hpp
+
+1485516394 /root/Projects/avr-libs/HID/src/HID-APIs/ConsumerAPI.h
+	<Arduino.h>
+	"HID-Settings.h"
+	"ConsumerAPI.hpp"
+
+1485516394 /root/Projects/avr-libs/HID/src/HID-APIs/ConsumerAPI.hpp
+
+1485516394 /root/Projects/avr-libs/HID/src/HID-APIs/DefaultKeyboardAPI.hpp
+
