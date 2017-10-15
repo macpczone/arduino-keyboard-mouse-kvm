@@ -1,3 +1,20 @@
+/* Arduino Keyboard Mouse
+ * Copyright (C) 2017  Mac PC Zone
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <Arduino.h>
 
 /*
@@ -237,11 +254,11 @@ void upcheck(byte k)
     }
     if (remember1 == 0 && remember2 == 0 && remember3 == 0 && sendit == 1) {
         sendit = 0;
-        BootKeyboard.press(HID_KEYBOARD_LEFT_CONTROL);
+        BootKeyboard.press(KEY_LEFT_CTRL);
         delay(100);
-        BootKeyboard.press(HID_KEYBOARD_LEFT_ALT);
+        BootKeyboard.press(KEY_LEFT_ALT);
         delay(100);
-        BootKeyboard.press(HID_KEYBOARD_DELETE_FORWARD);
+        BootKeyboard.press(KEY_DELETE);
         delay(100);
         BootKeyboard.releaseAll();
         ui.clear(); // display
@@ -249,8 +266,6 @@ void upcheck(byte k)
         ui.print(F("Sent"));
         ui.setCursor(0, 1);
         ui.print(F("CTRL+ALT+DELETE"));
-        Timer1.detachInterrupt();
-        SoftPWMSet(led, 0);
         RXLED0;
         digitalWrite(keyled, 1);
         delay(400);
@@ -268,6 +283,7 @@ void upcheck(byte k)
         delay(400);
         digitalWrite(keyled, 0);
         delay(400);
+        return;
     }
 #if USE_MOUSE
     if (k == 129) {
@@ -285,6 +301,7 @@ void upcheck(byte k)
         ui.setCursor(0, 2);
         ui.print(F("enabled"));
         mouse = 0;
+        return;
     }
     if (k == 218) {
         remember6 = 0;
@@ -298,6 +315,7 @@ void upcheck(byte k)
         ui.setCursor(0, 2);
         ui.print(F("enabled"));
         mouse = 1;
+        return;
     }
 #endif // USE_MOUSE
     if (k == 52) {
@@ -316,6 +334,7 @@ void upcheck(byte k)
         ui.print(F("keys to move and"));
         ui.setCursor(0, 3);
         ui.print(F("Space bar to set."));
+        return;
     }
     if (k == 53) {
         remember8 = 0;
@@ -336,6 +355,7 @@ void upcheck(byte k)
         delay(1000);
         myservoa.detach();  // attaches the servo on pin 9 to the servo object
         myservob.detach();  // attaches the servo on pin 9 to the servo object
+        return;
     }
     if (k == 55) {
         remember9 = 0;
@@ -352,6 +372,7 @@ void upcheck(byte k)
         myservoa.write(0);              // tell servo to go to position in variable 'pos'
         delay(1000);
         myservoa.detach();  // attaches the servo on pin 9 to the servo object
+        return;
     }
     if (k == 56) {
         remember10 = 0;
@@ -368,6 +389,7 @@ void upcheck(byte k)
         myservob.write(0);              // tell servo to go to position in variable 'pos'
         delay(1000);
         myservob.detach();  // attaches the servo on pin 9 to the servo object
+        return;
     }
     if (k == 57) {
         remember11 = 0;
@@ -384,6 +406,7 @@ void upcheck(byte k)
         myservob.write(0);              // tell servo to go to position in variable 'pos'
         delay(1000);
         myservob.detach();  // attaches the servo on pin 9 to the servo object
+        return;
     }
     if (k == 133) {
         rightshift = 0;
@@ -415,7 +438,7 @@ void loop()
                     printkey();
                     itoa(k, text, 10);
                     ui.print(String(text) + String(' '));
-                    BootKeyboard.press(pgm_read_byte(&keysims[k]));
+                    BootKeyboard.press((KeyboardKeycode)pgm_read_byte(&keysims[k]));
                     //mySerial.println(" pressed");
                 } else if (servoadj == 1) {
                     switch (k) {
@@ -534,7 +557,7 @@ void loop()
                     printkey();
                     itoa(k, text, 10);
                     ui.print(String(text) + String(' '));
-                    BootKeyboard.release(pgm_read_byte(&keysims[k]));
+                    BootKeyboard.release((KeyboardKeycode)pgm_read_byte(&keysims[k]));
                 } else {
                 }
                 upcheck(k);

@@ -20,7 +20,7 @@
 					<Add option="-DUSB_PID=0x9206" />
 					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/cores/arduino" />
 					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/variants/promicro" />
-					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/HID/src" />
+					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/HID_old" />
 					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/SPI/src" />
 					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/SoftwareSerial/src" />
 					<Add directory="$(ARDUINO_DIR)/hardware/arduino/avr/libraries/Wire/src" />
@@ -77,7 +77,7 @@
 			<Add directory="$(ARDUINO_DIR)/libraries/SD/src/utility" />
 			<Add directory="$(ARDUINO_DIR)/libraries/Servo/src/avr" />
 			<Add directory="$(ARDUINO_DIR)/libraries/Stepper/src" />
-			<Add directory="../avr-libs/KeyboardioHID/src" />
+			<Add directory="../avr-libs/HID/src" />
 			<Add directory="../avr-libs/NewliquidCrystal" />
 			<Add directory="../avr-libs/SoftPWM" />
 			<Add directory="../avr-libs/TimerOne" />
@@ -87,8 +87,8 @@
 		<Linker>
 			<Add option="-Wl,--gc-sections" />
 		</Linker>
-		<Unit filename="../avr-libs/KeyboardioHID/src/BootKeyboard/BootKeyboard.cpp" />
-		<Unit filename="../avr-libs/KeyboardioHID/src/MultiReport/Mouse.cpp" />
+		<Unit filename="../avr-libs/HID/src/MultiReport/ImprovedMouse.cpp" />
+		<Unit filename="../avr-libs/HID/src/SingleReport/BootKeyboard.cpp" />
 		<Unit filename="../avr-libs/NewliquidCrystal/FastIO.cpp" />
 		<Unit filename="../avr-libs/NewliquidCrystal/I2CIO.cpp" />
 		<Unit filename="../avr-libs/NewliquidCrystal/LCD.cpp" />
