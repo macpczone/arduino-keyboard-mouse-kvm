@@ -27,3 +27,7 @@ This library provides the fading LED, which is just there to show that the code 
 This library is just used to provide the interrupt code for the fading LED.
 
 The utils directory also contains some other code that I have written, which are used in the demonstration videos.
+
+Here is an image of the how the Pro Micro is connected:
+
+![Circuit](http://www.macpczone.co.uk/sites/default/files/styles/page_800/public/top_images/arduino_kvm_bb.png)
