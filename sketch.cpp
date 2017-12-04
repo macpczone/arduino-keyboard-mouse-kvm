@@ -42,6 +42,9 @@
 #include <Servo.h>
 #include <keysims.h>
 #include <EEPROM.h>
+#include <SPI.h>
+#include "RF24.h"
+#include "xxtea-iot-crypt.h"
 
 SoftwareSerial mySerial(9, 10); // RX, TX
 
@@ -50,7 +53,7 @@ bool press=true;
 const int led = LED_BUILTIN_RX;  // the pin with a LED
 const int keyled = 5;  // the pin with a LED
 const int servopin1 = 7;
-const int servopin2 = 14;
+const int servopin2 = 8;
 void blinkLED(void);
 LiquidCrystal_I2C ui(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 char text[6];
@@ -62,9 +65,17 @@ int powerdelay = 10000; // hold the power button in for 10 seconds
 int timeout = 0;
 int countdown = 10;
 
+RF24 radio(18,19);                        // Set up nRF24L01 radio on SPI bus plus pins 7 & 8
+byte addresses[][6] = {"1Node","2Node"};
+const uint64_t pipes[2] = { 0xABCDABCD71LL, 0x544d52687CLL };   // Radio pipe addresses for the 2 nodes to communicate.
+char data[32], gotChars[32], payload[32];
+uint8_t value;
+bool alive, status;
+
 void setup()
 {
 
+    xxtea.setKey F("Crypt Password");
     TXLED0;
     RXLED0;
     pinMode(keyled, OUTPUT);
@@ -82,6 +93,77 @@ void setup()
     mySerial.begin(9600);
     ui.clear(); // display
 //  ui.lcd_mode(1); // dual ht
+    value = radio.begin();
+    ui.print(F("Setup is: "));
+    ui.print(value);
+    delay(4000);
+    ui.clear(); // display
+    radio.setChannel(100);
+    radio.enableAckPayload();                     // Allow optional ack payloads
+    radio.enableDynamicPayloads();                // Ack payloads are dynamic payloads
+    // Set the PA Level low to prevent power supply related issues since this is a
+// getting_started sketch, and the likelihood of close proximity of the devices. RF24_PA_MAX is default.
+    radio.setPALevel(RF24_PA_LOW);
+    // Open a writing and reading pipe on each radio, with opposite addresses
+    radio.setDataRate(RF24_1MBPS);
+    radio.setAutoAck(1);                     // Ensure autoACK is enabled
+    radio.setRetries(2,15);                  // Optionally, increase the delay between retries & # of retries
+    radio.openWritingPipe(addresses[1]);
+    radio.openReadingPipe(1,addresses[0]);
+    radio.startListening();                 // Start listening
+    radio.writeAckPayload(1,&payload,32);          // Pre-load an ack-paylod into the FIFO buffer for pipe 1
+    radio.powerUp();                        //Power up the radio
+    ui.print(F("Checking the radio"));
+    value = radio.getChannel();
+    ui.setCursor(0, 1);
+    ui.print(F("Channel is: "));
+    ui.print(value);
+    delay(3000);
+    value = radio.getPALevel();
+    ui.setCursor(0, 2);
+    ui.print(F("Power is: "));
+    ui.print(value);
+    delay(3000);
+    value = radio.getDataRate();
+    ui.setCursor(0, 3);
+    ui.print(F("Rate is: "));
+    ui.print(value);
+    delay(3000);
+    ui.clear(); // display
+    String plaintext = F("**Radio check!**"); //16 chars == 16 bytes
+
+    String result = xxtea.encrypt(plaintext);
+    ui.print(F("Encrypted length:"));
+    ui.print(result.length());
+    ui.setCursor(0, 1);
+    ui.print(F("Encrypted data:"));
+    ui.setCursor(0, 2);
+    ui.print(result);
+    delay(2000);
+    ui.clear();
+    strncpy(data, plaintext.c_str(), 32);
+    ui.print(F("Sending data"));
+    status = radio.writeFast(&data,32);
+            radio.txStandBy();               // Returns 0 if failed. 1 if success. Blocks only until MAX_RT timeout or success. Data flushed on fail.
+    ui.setCursor(0, 1);
+    ui.print(F("Sent data maybe"));
+    if ( status ){                         // Send the counter variable to the other radio
+        if(!radio.available()){                             // If nothing in the buffer, we got an ack but it is blank
+            ui.print(F("Got blank response."));
+        }else{
+            while(radio.available() ){                      // If an ack with payload was received
+                radio.read( &gotChars, 32 );                  // Read it, and display the response time
+
+                ui.print(F("Got response "));
+                ui.setCursor(0, 1);
+                ui.print(gotChars);
+            }
+        }
+
+    }else{        ui.print(F("Sending failed.")); }          // If no ack response, sending failed
+
+    delay(3000);  // Try again later
+    ui.clear();
     ui.print(F("Press a key to begin"));
     ui.setCursor(0, 1);
     ui.print(F("or wait ten seconds"));
@@ -383,7 +465,7 @@ void upcheck(byte k)
         ui.print(F("Powering off the"));
         ui.setCursor(0, 1);
         ui.print(F("computer now!!"));
-        myservob.attach(14);  // attaches the servo on pin 9 to the servo object
+        myservob.attach(servopin2);  // attaches the servo on pin 9 to the servo object
         myservob.write(EEPROM.read(1));              // tell servo to go to position in variable 'pos'
         delay(powerdelay);
         myservob.write(0);              // tell servo to go to position in variable 'pos'
@@ -400,7 +482,7 @@ void upcheck(byte k)
         ui.print(F("Powering on the"));
         ui.setCursor(0, 1);
         ui.print(F("computer now."));
-        myservob.attach(14);  // attaches the servo on pin 9 to the servo object
+        myservob.attach(servopin2);  // attaches the servo on pin 9 to the servo object
         myservob.write(EEPROM.read(1));              // tell servo to go to position in variable 'pos'
         delay(2000);
         myservob.write(0);              // tell servo to go to position in variable 'pos'
@@ -447,7 +529,7 @@ void loop()
                         if (rservo < 170) {
                             rservo = rservo + rightshift * 9 + 1;
                         }
-                        myservoa.attach(7);  // attaches the servo on pin 9 to the servo object
+                        myservoa.attach(servopin1);  // attaches the servo on pin 9 to the servo object
                         myservoa.write(rservo);              // tell servo to go to position in variable 'pos'
                         delay(servodelay + rightshift * rsdelay);
                         myservoa.detach();  // attaches the servo on pin 9 to the servo object
@@ -462,7 +544,7 @@ void loop()
                         if (rservo > 10) {
                             rservo = rservo - rightshift * 9 - 1;
                         }
-                        myservoa.attach(7);  // attaches the servo on pin 9 to the servo object
+                        myservoa.attach(servopin1);  // attaches the servo on pin 9 to the servo object
                         myservoa.write(rservo);              // tell servo to go to position in variable 'pos'
                         delay(servodelay + rightshift * rsdelay);
                         myservoa.detach();  // attaches the servo on pin 9 to the servo object
@@ -477,7 +559,7 @@ void loop()
                         if (pservo < 170) {
                             pservo = pservo + rightshift * 9 + 1;
                         }
-                        myservob.attach(14);  // attaches the servo on pin 9 to the servo object
+                        myservob.attach(servopin2);  // attaches the servo on pin 9 to the servo object
                         myservob.write(pservo);              // tell servo to go to position in variable 'pos'
                         delay(servodelay + rightshift * rsdelay);
                         myservob.detach();  // attaches the servo on pin 9 to the servo object
@@ -492,7 +574,7 @@ void loop()
                         if (pservo > 10) {
                             pservo = pservo - rightshift * 9 - 1;
                         }
-                        myservob.attach(14);  // attaches the servo on pin 9 to the servo object
+                        myservob.attach(servopin2);  // attaches the servo on pin 9 to the servo object
                         myservob.write(pservo);              // tell servo to go to position in variable 'pos'
                         delay(servodelay + rightshift * rsdelay);
                         myservob.detach();  // attaches the servo on pin 9 to the servo object
