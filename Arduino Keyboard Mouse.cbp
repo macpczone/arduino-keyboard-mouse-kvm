@@ -70,6 +70,7 @@
 			<Add option="-DUSE_STEPPER=0" />
 			<Add option="-DUSE_WIRE=1" />
 			<Add option="-DUSE_MOUSE=1" />
+			<Add option="-DUSE_RF24=1" />
 			<Add directory="$(ARDUINO_DIR)/libraries/Ethernet/src" />
 			<Add directory="$(ARDUINO_DIR)/libraries/Ethernet/src/utility" />
 			<Add directory="$(ARDUINO_DIR)/libraries/LiquidCrystal/src" />

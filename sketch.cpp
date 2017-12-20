@@ -39,12 +39,16 @@
 #include <TimerOne.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
+#if USE_SERVO
 #include <Servo.h>
+#endif
 #include <keysims.h>
 #include <EEPROM.h>
 #include <SPI.h>
+#if USE_RF24
 #include "RF24.h"
 #include "xxtea-iot-crypt.h"
+#endif
 
 SoftwareSerial mySerial(9, 10); // RX, TX
 
@@ -52,30 +56,36 @@ SoftwareSerial mySerial(9, 10); // RX, TX
 bool press=true;
 const int led = LED_BUILTIN_RX;  // the pin with a LED
 const int keyled = 5;  // the pin with a LED
+#if USE_SERVO
 const int servopin1 = 7;
 const int servopin2 = 8;
-void blinkLED(void);
-LiquidCrystal_I2C ui(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
-char text[6];
 Servo myservoa;  // create servo object to control a servo
 Servo myservob;  // create servo object to control a servo
 int servodelay = 200;
+#endif
+void blinkLED(void);
+LiquidCrystal_I2C ui(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
+char text[6];
 int rsdelay = 200;
 int powerdelay = 10000; // hold the power button in for 10 seconds
 int timeout = 0;
 int countdown = 10;
 
+#if USE_RF24
 RF24 radio(18,19);                        // Set up nRF24L01 radio on SPI bus plus pins 7 & 8
 byte addresses[][6] = {"1Node","2Node"};
 const uint64_t pipes[2] = { 0xABCDABCD71LL, 0x544d52687CLL };   // Radio pipe addresses for the 2 nodes to communicate.
 char data[32], gotChars[32], payload[32];
 uint8_t value;
 bool alive, status;
+#endif
 
 void setup()
 {
+#if USE_RF24
     strcpy(payload, "Master Received OK");
     xxtea.setKey F("Crypt Password");
+#endif
     TXLED0;
     RXLED0;
     pinMode(keyled, OUTPUT);
@@ -93,6 +103,7 @@ void setup()
     mySerial.begin(9600);
     ui.clear(); // display
 //  ui.lcd_mode(1); // dual ht
+#if USE_RF24
     value = radio.begin();
     ui.print(F("Setup is: "));
     ui.print(value);
@@ -163,6 +174,7 @@ void setup()
         }
 
     }else{        ui.print(F("Sending failed.")); }          // If no ack response, sending failed
+#endif
 
     delay(3000);  // Try again later
     ui.clear();
@@ -204,6 +216,7 @@ void setup()
 
     // Set fade time for pin 13 to 100 ms fade-up time, and 500 ms fade-down time
     SoftPWMSetFadeTime(led, 300, 600);
+#if USE_SERVO
     myservoa.attach(servopin1);  // attaches the servo on pin 9 to the servo object
     myservob.attach(servopin2);
     myservoa.write(0);              // tell servo to go to position in variable 'pos'
@@ -211,7 +224,7 @@ void setup()
     delay(1000);
     myservoa.detach();  // attaches the servo on pin 9 to the servo object
     myservob.detach();  // attaches the servo on pin 9 to the servo object
-
+#endif
 }
 
 int ledState = LOW;
@@ -290,6 +303,7 @@ void downcheck(byte k)
         gomouse = 1;
     }
 #endif // USE_MOUSE
+#if USE_SERVO
     if (k == 52) {
         remember7 = 1;
     }
@@ -323,6 +337,7 @@ void downcheck(byte k)
     if (k == 133) {
         rightshift = 1;
     }
+#endif
 }
 
 void upcheck(byte k)
@@ -402,6 +417,7 @@ void upcheck(byte k)
         return;
     }
 #endif // USE_MOUSE
+#if USE_SERVO
     if (k == 52) {
         remember7 = 0;
     }
@@ -495,6 +511,7 @@ void upcheck(byte k)
     if (k == 133) {
         rightshift = 0;
     }
+#endif
 }
 
 void printkey (void)
@@ -525,6 +542,7 @@ void loop()
                     BootKeyboard.press((KeyboardKeycode)pgm_read_byte(&keysims[k]));
                     //mySerial.println(" pressed");
                 } else if (servoadj == 1) {
+#if USE_SERVO
                     switch (k) {
                     case 218:
                         // move mouse up
@@ -595,6 +613,7 @@ void loop()
                         ui.setCursor(0, 1);
                         ui.print(F("to EEPROM"));
                         break;
+#endif
                     }
                 } else {
 #if USE_MOUSE
