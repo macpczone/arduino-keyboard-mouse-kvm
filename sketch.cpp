@@ -74,7 +74,7 @@ bool alive, status;
 
 void setup()
 {
-
+    strcpy(payload, "Master Received OK");
     xxtea.setKey F("Crypt Password");
     TXLED0;
     RXLED0;
@@ -105,14 +105,11 @@ void setup()
 // getting_started sketch, and the likelihood of close proximity of the devices. RF24_PA_MAX is default.
     radio.setPALevel(RF24_PA_LOW);
     // Open a writing and reading pipe on each radio, with opposite addresses
-    radio.setDataRate(RF24_1MBPS);
+    radio.setDataRate(RF24_250KBPS);
     radio.setAutoAck(1);                     // Ensure autoACK is enabled
-    radio.setRetries(2,15);                  // Optionally, increase the delay between retries & # of retries
-    radio.openWritingPipe(addresses[1]);
-    radio.openReadingPipe(1,addresses[0]);
-    radio.startListening();                 // Start listening
-    radio.writeAckPayload(1,&payload,32);          // Pre-load an ack-paylod into the FIFO buffer for pipe 1
-    radio.powerUp();                        //Power up the radio
+    radio.setRetries(1,15);                  // Optionally, increase the delay between retries & # of retries
+    radio.openWritingPipe(addresses[0]);
+    radio.openReadingPipe(1,addresses[1]);
     ui.print(F("Checking the radio"));
     value = radio.getChannel();
     ui.setCursor(0, 1);
@@ -130,6 +127,10 @@ void setup()
     ui.print(value);
     delay(3000);
     ui.clear(); // display
+    radio.startListening();                 // Start listening
+    delay(100);
+    radio.stopListening();                                    // First, stop listening so we can talk.
+    radio.writeAckPayload(1,&payload,32);          // Pre-load an ack-paylod into the FIFO buffer for pipe 1
     String plaintext = F("**Radio check!**"); //16 chars == 16 bytes
 
     String result = xxtea.encrypt(plaintext);
@@ -141,20 +142,21 @@ void setup()
     ui.print(result);
     delay(2000);
     ui.clear();
-    strncpy(data, plaintext.c_str(), 32);
+//    strncpy(data, plaintext.c_str(), 32);
+    strncpy(data, "Turn it on", 32);
     ui.print(F("Sending data"));
     status = radio.writeFast(&data,32);
-            radio.txStandBy();               // Returns 0 if failed. 1 if success. Blocks only until MAX_RT timeout or success. Data flushed on fail.
+    radio.txStandBy();               // Returns 0 if failed. 1 if success. Blocks only until MAX_RT timeout or success. Data flushed on fail.
     ui.setCursor(0, 1);
     ui.print(F("Sent data maybe"));
     if ( status ){                         // Send the counter variable to the other radio
         if(!radio.available()){                             // If nothing in the buffer, we got an ack but it is blank
             ui.print(F("Got blank response."));
         }else{
-            while(radio.available() ){                      // If an ack with payload was received
+            if(radio.isAckPayloadAvailable() ){                      // If an ack with payload was received
                 radio.read( &gotChars, 32 );                  // Read it, and display the response time
 
-                ui.print(F("Got response "));
+                ui.print(F("Got response: "));
                 ui.setCursor(0, 1);
                 ui.print(gotChars);
             }

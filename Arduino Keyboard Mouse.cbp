@@ -82,7 +82,9 @@
 			<Add directory="../avr-libs/SoftPWM" />
 			<Add directory="../avr-libs/TimerOne" />
 			<Add directory="$(ARDUINO_DIR)/libraries/Servo/src" />
-			<Add directory="../avr-libs" />
+			<Add directory="../Arduino-Keyboard-Mouse" />
+			<Add directory="../avr-libs/rf24" />
+			<Add directory="../avr-libs/xxtea-iot" />
 		</Compiler>
 		<Linker>
 			<Add option="-Wl,--gc-sections" />
@@ -96,6 +98,9 @@
 		<Unit filename="../avr-libs/SoftPWM/SoftPWM.cpp" />
 		<Unit filename="../avr-libs/TimerOne/TimerOne.cpp" />
 		<Unit filename="../avr-libs/keysims.h" />
+		<Unit filename="../avr-libs/rf24/RF24.cpp" />
+		<Unit filename="../avr-libs/xxtea-iot/core/xxtea_core.cpp" />
+		<Unit filename="../avr-libs/xxtea-iot/xxtea-iot-crypt.cpp" />
 		<Unit filename="cores/CDC.cpp" />
 		<Unit filename="cores/HID.cpp" />
 		<Unit filename="cores/HardwareSerial.cpp" />
