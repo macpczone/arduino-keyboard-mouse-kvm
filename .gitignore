@@ -1,2 +1,5 @@
 /.objs/*
 /bin/promicro/avrdude-command.text
+/utils/core
+/utils/keysims-x11.text
+/utils/xreadkeys

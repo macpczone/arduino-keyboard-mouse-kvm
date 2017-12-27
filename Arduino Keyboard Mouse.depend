@@ -861,7 +861,7 @@
 	"Wire.cpp"
 	"twi.c"
 
-1513644739 source:/root/Projects/Arduino-Keyboard-Mouse/sketch.cpp
+1513911671 source:/root/Projects/Arduino-Keyboard-Mouse/sketch.cpp
 	<Arduino.h>
 	<SoftwareSerial.h>
 	"HID-Project.h"
@@ -870,12 +870,11 @@
 	<Wire.h>
 	<LiquidCrystal_I2C.h>
 	<Servo.h>
-	<keysims.h>
 	<EEPROM.h>
+	<keysims.h>
 	<SPI.h>
 	"RF24.h"
 	"xxtea-iot-crypt.h"
-	<string.h>
 
 1485516394 /root/Projects/avr-libs/HID/src/HID-Project.h
 	"SingleReport/SingleAbsoluteMouse.h"

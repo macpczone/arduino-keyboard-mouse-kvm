@@ -31,7 +31,6 @@
      0x1 - next key pressed
    1 byte - character pressed
      for special chars look at arduino keyboard mapping
-
  */
 #include <SoftwareSerial.h>
 #include "HID-Project.h"
@@ -41,11 +40,11 @@
 #include <LiquidCrystal_I2C.h>
 #if USE_SERVO
 #include <Servo.h>
+#include <EEPROM.h>
 #endif
 #include <keysims.h>
-#include <EEPROM.h>
-#include <SPI.h>
 #if USE_RF24
+#include <SPI.h>
 #include "RF24.h"
 #include "xxtea-iot-crypt.h"
 #endif
@@ -56,20 +55,26 @@ SoftwareSerial mySerial(9, 10); // RX, TX
 bool press=true;
 const int led = LED_BUILTIN_RX;  // the pin with a LED
 const int keyled = 5;  // the pin with a LED
+
 #if USE_SERVO
 const int servopin1 = 7;
 const int servopin2 = 8;
 Servo myservoa;  // create servo object to control a servo
 Servo myservob;  // create servo object to control a servo
 int servodelay = 200;
-#endif
-void blinkLED(void);
-LiquidCrystal_I2C ui(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
-char text[6];
 int rsdelay = 200;
 int powerdelay = 10000; // hold the power button in for 10 seconds
+#endif
+void blinkLED(void);
+void setcursor (uint8_t, uint8_t);
+void sendnewline (void);
+
+LiquidCrystal_I2C ui(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
+char text[6];
 int timeout = 0;
 int countdown = 10;
+
+#include "printit.h"
 
 #if USE_RF24
 RF24 radio(18,19);                        // Set up nRF24L01 radio on SPI bus plus pins 7 & 8
@@ -99,19 +104,19 @@ void setup()
     delay(200);
     digitalWrite(keyled, 0);
     ui.begin(20,4);         // initialize the lcd for 20 chars 4 lines, turn on backlight
-//  ui.lcd_mode(0); // dual ht
     mySerial.begin(9600);
     ui.clear(); // display
 //  ui.lcd_mode(1); // dual ht
 #if USE_RF24
     value = radio.begin();
-    ui.print(F("Setup is: "));
-    ui.print(value);
+    printit(F("Setup is: "));
+    printit(value);
+    sendnewline();
     delay(4000);
     ui.clear(); // display
     radio.setChannel(100);
-    radio.enableAckPayload();                     // Allow optional ack payloads
-    radio.enableDynamicPayloads();                // Ack payloads are dynamic payloads
+    radio.enableAckPayload();                    // Allow optional ack payloads
+    radio.enableDynamicPayloads();               // Ack payloads are dynamic payloads
     // Set the PA Level low to prevent power supply related issues since this is a
 // getting_started sketch, and the likelihood of close proximity of the devices. RF24_PA_MAX is default.
     radio.setPALevel(RF24_PA_LOW);
@@ -121,21 +126,22 @@ void setup()
     radio.setRetries(1,15);                  // Optionally, increase the delay between retries & # of retries
     radio.openWritingPipe(addresses[0]);
     radio.openReadingPipe(1,addresses[1]);
-    ui.print(F("Checking the radio"));
+    printit(F("Checking the radio"));
     value = radio.getChannel();
-    ui.setCursor(0, 1);
-    ui.print(F("Channel is: "));
-    ui.print(value);
+    setcursor(0, 1);
+    printit(F("Channel is: "));
+    printit(value);
     delay(3000);
     value = radio.getPALevel();
-    ui.setCursor(0, 2);
-    ui.print(F("Power is: "));
-    ui.print(value);
+    setcursor(0, 2);
+    printit(F("Power is: "));
+    printit(value);
     delay(3000);
     value = radio.getDataRate();
-    ui.setCursor(0, 3);
-    ui.print(F("Rate is: "));
-    ui.print(value);
+    setcursor(0, 3);
+    printit(F("Rate is: "));
+    printit(value);
+    sendnewline();
     delay(3000);
     ui.clear(); // display
     radio.startListening();                 // Start listening
@@ -145,51 +151,54 @@ void setup()
     String plaintext = F("**Radio check!**"); //16 chars == 16 bytes
 
     String result = xxtea.encrypt(plaintext);
-    ui.print(F("Encrypted length:"));
-    ui.print(result.length());
-    ui.setCursor(0, 1);
-    ui.print(F("Encrypted data:"));
-    ui.setCursor(0, 2);
-    ui.print(result);
+    printit(F("Encrypted length:"));
+    printit(result.length());
+    setcursor(0, 1);
+    printit(F("Encrypted data:"));
+    setcursor(0, 2);
+    printit(result);
+    sendnewline();
     delay(2000);
     ui.clear();
 //    strncpy(data, plaintext.c_str(), 32);
     strncpy(data, "Turn it on", 32);
-    ui.print(F("Sending data"));
+    printit(F("Sending data"));
     status = radio.writeFast(&data,32);
     radio.txStandBy();               // Returns 0 if failed. 1 if success. Blocks only until MAX_RT timeout or success. Data flushed on fail.
-    ui.setCursor(0, 1);
-    ui.print(F("Sent data maybe"));
+    setcursor(0, 1);
+    printit(F("Sent data maybe"));
+    setcursor(0, 2);
     if ( status ){                         // Send the counter variable to the other radio
         if(!radio.available()){                             // If nothing in the buffer, we got an ack but it is blank
-            ui.print(F("Got blank response."));
+            printit(F("Got blank response."));
         }else{
-            if(radio.isAckPayloadAvailable() ){                      // If an ack with payload was received
+            if(radio.isAckPayloadAvailable() ){                     // If an ack with payload was received
                 radio.read( &gotChars, 32 );                  // Read it, and display the response time
 
-                ui.print(F("Got response: "));
-                ui.setCursor(0, 1);
-                ui.print(gotChars);
+                printit(F("Got response: "));
+                setcursor(0, 1);
+                printit(gotChars);
             }
         }
 
-    }else{        ui.print(F("Sending failed.")); }          // If no ack response, sending failed
+    }else{        printit(F("Sending failed.")); }          // If no ack response, sending failed
 #endif
+    sendnewline();
 
     delay(3000);  // Try again later
     ui.clear();
-    ui.print(F("Press a key to begin"));
-    ui.setCursor(0, 1);
-    ui.print(F("or wait ten seconds"));
-    ui.setCursor(0, 2);
+    printit(F("Press a key to begin"));
+    setcursor(0, 1);
+    printit(F("or wait ten seconds"));
+    setcursor(0, 2);
     while(mySerial.available() <= 0 && timeout < 100) {
         delay(100);
         if (timeout % 10 == 0) {
-            ui.print(countdown);
-            ui.print(F(":"));
+            printit(countdown);
+            printit(F(":"));
             countdown--;
             if (countdown == 1) {
-                ui.setCursor(0, 3);
+                setcursor(0, 3);
             }
         }
         timeout++;
@@ -199,7 +208,9 @@ void setup()
         delay(200);
     }
     ui.clear(); // display
-    ui.print(F("System ready!!"));
+    sendnewline();
+    printit(F("System ready!!"));
+    sendnewline();
     delay(1000);
 
 
@@ -256,6 +267,17 @@ int mousemove = 40;
 int mousebiginc = 100;
 int mousesmallinc = 5;
 int mousemext;
+
+void setcursor(uint8_t col, uint8_t row)
+{
+    ui.setCursor(col, row);
+    mySerial.println();
+}
+
+void sendnewline(void)
+{
+    mySerial.println();
+}
 
 void blinkLED(void)
 {
@@ -362,9 +384,10 @@ void upcheck(byte k)
         BootKeyboard.releaseAll();
         ui.clear(); // display
 //						ui.lcd_mode(0); // dual ht
-        ui.print(F("Sent"));
-        ui.setCursor(0, 1);
-        ui.print(F("CTRL+ALT+DELETE"));
+        printit(F("Sent"));
+        setcursor(0, 1);
+        printit(F("CTRL+ALT+DELETE"));
+        sendnewline();
         RXLED0;
         digitalWrite(keyled, 1);
         delay(400);
@@ -396,9 +419,10 @@ void upcheck(byte k)
         Mouse.end();
         BootKeyboard.begin();
         ui.clear(); // display
-        ui.print(F("Keyboard mode"));
-        ui.setCursor(0, 2);
-        ui.print(F("enabled"));
+        printit(F("Keyboard mode"));
+        setcursor(0, 2);
+        printit(F("enabled"));
+        sendnewline();
         mouse = 0;
         return;
     }
@@ -410,9 +434,10 @@ void upcheck(byte k)
         BootKeyboard.end();
         Mouse.begin();
         ui.clear(); // display
-        ui.print(F("Mouse mode"));
-        ui.setCursor(0, 2);
-        ui.print(F("enabled"));
+        printit(F("Mouse mode"));
+        setcursor(0, 2);
+        printit(F("enabled"));
+        sendnewline();
         mouse = 1;
         return;
     }
@@ -427,13 +452,14 @@ void upcheck(byte k)
         servoadj = 1;
         ui.clear(); // display
         //ui.lcd_mode(0); // dual ht
-        ui.print(F("Servo adjust mode"));
-        ui.setCursor(0, 1);
-        ui.print(F("enabled. Press arrow"));
-        ui.setCursor(0, 2);
-        ui.print(F("keys to move and"));
-        ui.setCursor(0, 3);
-        ui.print(F("Space bar to set."));
+        printit(F("Servo adjust mode"));
+        setcursor(0, 1);
+        printit(F("enabled. Press arrow"));
+        setcursor(0, 2);
+        printit(F("keys to move and"));
+        setcursor(0, 3);
+        printit(F("Space bar to set."));
+        sendnewline();
         return;
     }
     if (k == 53) {
@@ -445,9 +471,10 @@ void upcheck(byte k)
         servoadj = 0;
         ui.clear(); // display
         //ui.lcd_mode(0); // dual ht
-        ui.print(F("Servo adjust mode"));
-        ui.setCursor(0, 1);
-        ui.print(F("disabled."));
+        printit(F("Servo adjust mode"));
+        setcursor(0, 1);
+        printit(F("disabled."));
+        sendnewline();
         myservoa.attach(servopin1);  // attaches the servo on pin 9 to the servo object
         myservob.attach(servopin2);
         myservoa.write(0);              // tell servo to go to position in variable 'pos'
@@ -463,9 +490,10 @@ void upcheck(byte k)
     if (remember1 == 0 && remember2 == 0 && remember9 == 0 && reset == 1) {
         reset = 0;
         ui.clear(); // display
-        ui.print(F("Resetting the"));
-        ui.setCursor(0, 1);
-        ui.print(F("computer now!!"));
+        printit(F("Resetting the"));
+        setcursor(0, 1);
+        printit(F("computer now!!"));
+        sendnewline();
         myservoa.attach(7);  // attaches the servo on pin 9 to the servo object
         myservoa.write(EEPROM.read(0));              // tell servo to go to position in variable 'pos'
         delay(1500);
@@ -480,9 +508,10 @@ void upcheck(byte k)
     if (remember1 == 0 && remember2 == 0 && remember10 == 0 && poweroff == 1) {
         poweroff = 0;
         ui.clear(); // display
-        ui.print(F("Powering off the"));
-        ui.setCursor(0, 1);
-        ui.print(F("computer now!!"));
+        printit(F("Powering off the"));
+        setcursor(0, 1);
+        printit(F("computer now!!"));
+        sendnewline();
         myservob.attach(servopin2);  // attaches the servo on pin 9 to the servo object
         myservob.write(EEPROM.read(1));              // tell servo to go to position in variable 'pos'
         delay(powerdelay);
@@ -497,9 +526,10 @@ void upcheck(byte k)
     if (remember1 == 0 && remember2 == 0 && remember11 == 0 && poweron == 1) {
         poweron = 0;
         ui.clear(); // display
-        ui.print(F("Powering on the"));
-        ui.setCursor(0, 1);
-        ui.print(F("computer now."));
+        printit(F("Powering on the"));
+        setcursor(0, 1);
+        printit(F("computer now."));
+        sendnewline();
         myservob.attach(servopin2);  // attaches the servo on pin 9 to the servo object
         myservob.write(EEPROM.read(1));              // tell servo to go to position in variable 'pos'
         delay(2000);
@@ -518,7 +548,7 @@ void printkey (void)
 {
 //	ui.lcd_mode(1); // dual ht
     ui.clear(); // display
-    ui.print(F("Key: "));
+    printit(F("A:: Key: "));
 }
 
 void loop()
@@ -526,8 +556,10 @@ void loop()
 
     if (mySerial.available()) {
         byte k = mySerial.read();
-        //Serial.write(k);
-        //Serial.println(" received");
+        itoa(k, text, 10);
+        mySerial.print("A:: ");
+        mySerial.print(text);
+        mySerial.println(" received");
         if (k == 0) {
             press = 0;
         } else if (k == 1) {
@@ -538,7 +570,8 @@ void loop()
                 if (mouse == 0 && servoadj == 0) {
                     printkey();
                     itoa(k, text, 10);
-                    ui.print(String(text) + String(' '));
+                    printit(String(text) + String(" Pressed"));
+                    sendnewline();
                     BootKeyboard.press((KeyboardKeycode)pgm_read_byte(&keysims[k]));
                     //mySerial.println(" pressed");
                 } else if (servoadj == 1) {
@@ -554,10 +587,11 @@ void loop()
                         delay(servodelay + rightshift * rsdelay);
                         myservoa.detach();  // attaches the servo on pin 9 to the servo object
                         ui.clear(); // display
-                        ui.print(F("Servo reset in."));
-                        ui.setCursor(0, 1);
-                        ui.print(F("Servo pos is: "));
-                        ui.print(rservo);
+                        printit(F("Servo reset in."));
+                        setcursor(0, 1);
+                        printit(F("Servo pos is: "));
+                        printit(rservo);
+                        sendnewline();
                         break;
                     case 217:
                         // move mouse down
@@ -569,10 +603,11 @@ void loop()
                         delay(servodelay + rightshift * rsdelay);
                         myservoa.detach();  // attaches the servo on pin 9 to the servo object
                         ui.clear(); // display
-                        ui.print(F("Servo reset out"));
-                        ui.setCursor(0, 1);
-                        ui.print(F("Servo pos is: "));
-                        ui.print(rservo);
+                        printit(F("Servo reset out"));
+                        setcursor(0, 1);
+                        printit(F("Servo pos is: "));
+                        printit(rservo);
+                        sendnewline();
                         break;
                     case 216:
                         // move mouse left
@@ -584,10 +619,11 @@ void loop()
                         delay(servodelay + rightshift * rsdelay);
                         myservob.detach();  // attaches the servo on pin 9 to the servo object
                         ui.clear(); // display
-                        ui.print(F("Servo power in"));
-                        ui.setCursor(0, 1);
-                        ui.print(F("Servo pos is: "));
-                        ui.print(pservo);
+                        printit(F("Servo power in"));
+                        setcursor(0, 1);
+                        printit(F("Servo pos is: "));
+                        printit(pservo);
+                        sendnewline();
                         break;
                     case 215:
                         // move mouse right
@@ -599,22 +635,24 @@ void loop()
                         delay(servodelay + rightshift * rsdelay);
                         myservob.detach();  // attaches the servo on pin 9 to the servo object
                         ui.clear(); // display
-                        ui.print(F("Servo power out"));
-                        ui.setCursor(0, 1);
-                        ui.print(F("Servo pos is: "));
-                        ui.print(pservo);
+                        printit(F("Servo power out"));
+                        setcursor(0, 1);
+                        printit(F("Servo pos is: "));
+                        printit(pservo);
+                        sendnewline();
                         break;
                     case 32:
                         // perform mouse left click
                         EEPROM.update(0, rservo);
                         EEPROM.update(1, pservo);
                         ui.clear(); // display
-                        ui.print(F("Positions saved"));
-                        ui.setCursor(0, 1);
-                        ui.print(F("to EEPROM"));
+                        printit(F("Positions saved"));
+                        setcursor(0, 1);
+                        printit(F("to EEPROM"));
+                        sendnewline();
                         break;
-#endif
                     }
+#endif
                 } else {
 #if USE_MOUSE
                     mousemext = remember1 * (mousebiginc - mousemove) - remember4 * (mousemove - mousesmallinc);
@@ -623,34 +661,35 @@ void loop()
                     case 218:
                         // move mouse up
                         Mouse.move(0, -40 - mousemext);
-                        ui.print(F("Mouse up"));
+                        printit(F("Mouse up"));
                         break;
                     case 217:
                         // move mouse down
                         Mouse.move(0, 40 + mousemext);
-                        ui.print(F("Mouse down"));
+                        printit(F("Mouse down"));
                         break;
                     case 216:
                         // move mouse left
                         Mouse.move(-40 - mousemext, 0);
-                        ui.print(F("Mouse left"));
+                        printit(F("Mouse left"));
                         break;
                     case 215:
                         // move mouse right
                         Mouse.move(40 + mousemext, 0);
-                        ui.print(F("Mouse right"));
+                        printit(F("Mouse right"));
                         break;
                     case 32:
                         // perform mouse left click
                         Mouse.click(MOUSE_LEFT);
-                        ui.print(F("Click left"));
+                        printit(F("Click left"));
                         break;
                     case 134:
                         // perform mouse right click
                         Mouse.click(MOUSE_RIGHT);
-                        ui.print(F("Click right"));
+                        printit(F("Click right"));
                         break;
                     }
+                    sendnewline();
 #endif // USE_MOUSE
                 }
                 downcheck(k);
@@ -659,7 +698,8 @@ void loop()
                 if (mouse == 0 && servoadj == 0) {
                     printkey();
                     itoa(k, text, 10);
-                    ui.print(String(text) + String(' '));
+                    printit(String(text) + String(" Released"));
+                    sendnewline();
                     BootKeyboard.release((KeyboardKeycode)pgm_read_byte(&keysims[k]));
                 } else {
                 }
