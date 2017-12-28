@@ -74,7 +74,7 @@ int main()
     if (fd <0) {perror(MODEMDEVICE); exit(-1); }
 
     tcgetattr(fd,&oldtio); /* save current port settings */
-    /* set new port settings for canonical input processing */
+    cfmakeraw(&newtio); // set struct for new term settings to raw.  See man 'cfmakeraw'
     newtio.c_cflag = BAUDRATE | CS8 | CLOCAL | CREAD;
     newtio.c_iflag = IGNPAR | ICRNL;
     newtio.c_lflag = ~(ICANON | ECHO | ECHOE | ISIG);
@@ -82,8 +82,9 @@ int main()
 //    newtio.c_lflag = ICANON;
 //    newtio.c_cc[VMIN]=1;
 //    newtio.c_cc[VTIME]=0;
-    tcflush(fd, TCIFLUSH);
-    tcsetattr(fd,TCSANOW,&newtio);
+  sleep(2); //required to make flush work, for some reason
+  tcflush(fd,TCIOFLUSH);
+    tcsetattr(fd,TCSAFLUSH,&newtio);
 
     pthread_attr_init(&attr);
     pthread_create(&tid, &attr, reader_thread, &fd);

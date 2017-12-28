@@ -60,7 +60,7 @@ keystruct keysims[] = {
 		{61, "slash", 47},
 		{62, "Shift_R", 133},
 		//{63, "KP_Multiply", },
-		{64, "Alt_L", 131},
+		{64, "Alt_L", 130},
 		{65, "space", 32},
 		{66, "Caps_Lock", 193},
 		{67, "F1", 194},

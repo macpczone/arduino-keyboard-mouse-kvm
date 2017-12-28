@@ -64,9 +64,9 @@
 			<Add option="-DUSE_ETHERNET=0" />
 			<Add option="-DUSE_LCD=0" />
 			<Add option="-DUSE_SD=0" />
-			<Add option="-DUSE_SERVO=1" />
+			<Add option="-DUSE_SERVO=0" />
 			<Add option="-DUSE_SOFTSERIAL=1" />
-			<Add option="-DUSE_SPI=0" />
+			<Add option="-DUSE_SPI=1" />
 			<Add option="-DUSE_STEPPER=0" />
 			<Add option="-DUSE_WIRE=1" />
 			<Add option="-DUSE_MOUSE=1" />
@@ -137,6 +137,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="libraries/libraries.cpp" />
+		<Unit filename="printit.h" />
 		<Unit filename="sketch.cpp" />
 		<Extensions>
 			<code_completion />

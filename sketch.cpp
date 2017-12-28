@@ -45,12 +45,14 @@
 #include <keysims.h>
 #if USE_RF24
 #include <SPI.h>
+#include <nRF24L01.h>
 #include "RF24.h"
 #include "xxtea-iot-crypt.h"
 #endif
 
 SoftwareSerial mySerial(9, 10); // RX, TX
 
+#include <printf.h>
 // flag if the next key is pressed or released
 bool press=true;
 const int led = LED_BUILTIN_RX;  // the pin with a LED
@@ -73,12 +75,13 @@ LiquidCrystal_I2C ui(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 char text[6];
 int timeout = 0;
 int countdown = 10;
-
+int rdpin = 6;
 #include "printit.h"
 
 #if USE_RF24
 RF24 radio(18,19);                        // Set up nRF24L01 radio on SPI bus plus pins 7 & 8
-byte addresses[][6] = {"1Node","2Node"};
+//RF24 radio(6,4);                        // Set up nRF24L01 radio on SPI bus plus pins 7 & 8
+const byte addresses[][6] = {"1Node","2Node"};
 const uint64_t pipes[2] = { 0xABCDABCD71LL, 0x544d52687CLL };   // Radio pipe addresses for the 2 nodes to communicate.
 char data[32], gotChars[32], payload[32];
 uint8_t value;
@@ -90,6 +93,7 @@ void setup()
 #if USE_RF24
     strcpy(payload, "Master Received OK");
     xxtea.setKey F("Crypt Password");
+    pinMode(rdpin, INPUT_PULLUP);
 #endif
     TXLED0;
     RXLED0;
@@ -108,6 +112,10 @@ void setup()
     ui.clear(); // display
 //  ui.lcd_mode(1); // dual ht
 #if USE_RF24
+    String plaintext = F("**Radio check!**"); //16 chars == 16 bytes
+    String result = xxtea.encrypt(plaintext);
+    printf_begin();
+    if (digitalRead(rdpin) == 0){ goto skipradio;}
     value = radio.begin();
     printit(F("Setup is: "));
     printit(value);
@@ -115,17 +123,15 @@ void setup()
     delay(4000);
     ui.clear(); // display
     radio.setChannel(100);
-    radio.enableAckPayload();                    // Allow optional ack payloads
-    radio.enableDynamicPayloads();               // Ack payloads are dynamic payloads
+//    radio.enableAckPayload();                    // Allow optional ack payloads
+//    radio.enableDynamicPayloads();               // Ack payloads are dynamic payloads
     // Set the PA Level low to prevent power supply related issues since this is a
-// getting_started sketch, and the likelihood of close proximity of the devices. RF24_PA_MAX is default.
+//  getting_started sketch, and the likelihood of close proximity of the devices. RF24_PA_MAX is default.
     radio.setPALevel(RF24_PA_LOW);
     // Open a writing and reading pipe on each radio, with opposite addresses
     radio.setDataRate(RF24_250KBPS);
-    radio.setAutoAck(1);                     // Ensure autoACK is enabled
-    radio.setRetries(1,15);                  // Optionally, increase the delay between retries & # of retries
-    radio.openWritingPipe(addresses[0]);
-    radio.openReadingPipe(1,addresses[1]);
+//    radio.setAutoAck(1);                     // Ensure autoACK is enabled
+//    radio.setRetries(1,15);                  // Optionally, increase the delay between retries & # of retries
     printit(F("Checking the radio"));
     value = radio.getChannel();
     setcursor(0, 1);
@@ -142,15 +148,14 @@ void setup()
     printit(F("Rate is: "));
     printit(value);
     sendnewline();
+    radio.openWritingPipe(addresses[0]);
+    radio.openReadingPipe(1,addresses[1]);
     delay(3000);
     ui.clear(); // display
     radio.startListening();                 // Start listening
     delay(100);
     radio.stopListening();                                    // First, stop listening so we can talk.
-    radio.writeAckPayload(1,&payload,32);          // Pre-load an ack-paylod into the FIFO buffer for pipe 1
-    String plaintext = F("**Radio check!**"); //16 chars == 16 bytes
-
-    String result = xxtea.encrypt(plaintext);
+//    radio.writeAckPayload(1,&payload,32);          // Pre-load an ack-paylod into the FIFO buffer for pipe 1
     printit(F("Encrypted length:"));
     printit(result.length());
     setcursor(0, 1);
@@ -163,25 +168,38 @@ void setup()
 //    strncpy(data, plaintext.c_str(), 32);
     strncpy(data, "Turn it on", 32);
     printit(F("Sending data"));
-    status = radio.writeFast(&data,32);
-    radio.txStandBy();               // Returns 0 if failed. 1 if success. Blocks only until MAX_RT timeout or success. Data flushed on fail.
+    status = radio.write(&data,32);
+//    radio.txStandBy();               // Returns 0 if failed. 1 if success. Blocks only until MAX_RT timeout or success. Data flushed on fail.
     setcursor(0, 1);
     printit(F("Sent data maybe"));
     setcursor(0, 2);
     if ( status ){                         // Send the counter variable to the other radio
-        if(!radio.available()){                             // If nothing in the buffer, we got an ack but it is blank
-            printit(F("Got blank response."));
-        }else{
-            if(radio.isAckPayloadAvailable() ){                     // If an ack with payload was received
+            radio.startListening();                 // Start listening
+            unsigned long started_waiting_at = micros();               // Set up a timeout period, get the current microseconds
+            boolean timeout = false;                                   // Set up a variable to indicate if a response was received or not
+
+            while ( ! radio.available() ){                             // While nothing is received
+              if (micros() - started_waiting_at > 20000000 ){            // If waited longer than 200ms, indicate timeout and exit while loop
+                  timeout = true;
+                  break;
+              }
+            }
+
+            if ( timeout ){                                             // Describe the results
+                printit(F("Failed, response timed out."));
+            }else{
+                                                                        // Grab the response, compare, and send to debugging spew
                 radio.read( &gotChars, 32 );                  // Read it, and display the response time
 
                 printit(F("Got response: "));
-                setcursor(0, 1);
+                setcursor(0, 3);
                 printit(gotChars);
             }
-        }
 
     }else{        printit(F("Sending failed.")); }          // If no ack response, sending failed
+    sendnewline();
+    radio.printDetails();
+skipradio:
 #endif
     sendnewline();
 
@@ -383,7 +401,7 @@ void upcheck(byte k)
         delay(100);
         BootKeyboard.releaseAll();
         ui.clear(); // display
-//						ui.lcd_mode(0); // dual ht
+//      ui.lcd_mode(0); // dual ht
         printit(F("Sent"));
         setcursor(0, 1);
         printit(F("CTRL+ALT+DELETE"));
@@ -557,9 +575,9 @@ void loop()
     if (mySerial.available()) {
         byte k = mySerial.read();
         itoa(k, text, 10);
-        mySerial.print("A:: ");
+        mySerial.print(F("A:: "));
         mySerial.print(text);
-        mySerial.println(" received");
+        mySerial.println(F(" received"));
         if (k == 0) {
             press = 0;
         } else if (k == 1) {
@@ -570,7 +588,7 @@ void loop()
                 if (mouse == 0 && servoadj == 0) {
                     printkey();
                     itoa(k, text, 10);
-                    printit(String(text) + String(" Pressed"));
+                    printit(String(text) + String(F(" Pressed")));
                     sendnewline();
                     BootKeyboard.press((KeyboardKeycode)pgm_read_byte(&keysims[k]));
                     //mySerial.println(" pressed");
@@ -698,7 +716,7 @@ void loop()
                 if (mouse == 0 && servoadj == 0) {
                     printkey();
                     itoa(k, text, 10);
-                    printit(String(text) + String(" Released"));
+                    printit(String(text) + String(F(" Released")));
                     sendnewline();
                     BootKeyboard.release((KeyboardKeycode)pgm_read_byte(&keysims[k]));
                 } else {
