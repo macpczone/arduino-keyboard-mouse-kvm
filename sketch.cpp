@@ -57,7 +57,7 @@ SoftwareSerial mySerial(9, 10); // RX, TX
 bool press=true;
 const int led = LED_BUILTIN_RX;  // the pin with a LED
 const int keyled = 5;  // the pin with a LED
-
+bool noecho = 0, neenable = 1;
 #if USE_SERVO
 const int servopin1 = 7;
 const int servopin2 = 8;
@@ -70,12 +70,14 @@ int powerdelay = 10000; // hold the power button in for 10 seconds
 void blinkLED(void);
 void setcursor (uint8_t, uint8_t);
 void sendnewline (void);
+void trdata (void);
 
 LiquidCrystal_I2C ui(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 char text[6];
 int timeout = 0;
 int countdown = 10;
 int rdpin = 6;
+int a;
 #include "printit.h"
 
 #if USE_RF24
@@ -85,7 +87,7 @@ const byte addresses[][6] = {"1Node","2Node"};
 const uint64_t pipes[2] = { 0xABCDABCD71LL, 0x544d52687CLL };   // Radio pipe addresses for the 2 nodes to communicate.
 char data[32], gotChars[32], payload[32];
 uint8_t value;
-bool alive, status;
+bool alive = 0, status = 0;
 #endif
 
 void setup()
@@ -98,15 +100,10 @@ void setup()
     TXLED0;
     RXLED0;
     pinMode(keyled, OUTPUT);
-    digitalWrite(keyled, 0);
-    delay(200);
-    digitalWrite(keyled, 1);
-    delay(200);
-    digitalWrite(keyled, 0);
-    delay(200);
-    digitalWrite(keyled, 1);
-    delay(200);
-    digitalWrite(keyled, 0);
+    for (a = 1; a <= 4; a++) {
+    digitalWrite(keyled, !digitalRead(keyled));
+    delay(400);
+    }
     ui.begin(20,4);         // initialize the lcd for 20 chars 4 lines, turn on backlight
     mySerial.begin(9600);
     ui.clear(); // display
@@ -115,14 +112,17 @@ void setup()
     String plaintext = F("**Radio check!**"); //16 chars == 16 bytes
     String result = xxtea.encrypt(plaintext);
     printf_begin();
-    if (digitalRead(rdpin) == 0){ goto skipradio;}
+    if (digitalRead(rdpin) == 0){
+        alive = 0;
+            goto skipradio;
+    }
     value = radio.begin();
     printit(F("Setup is: "));
     printit(value);
     sendnewline();
     delay(4000);
     ui.clear(); // display
-    radio.setChannel(100);
+    radio.setChannel(105);
 //    radio.enableAckPayload();                    // Allow optional ack payloads
 //    radio.enableDynamicPayloads();               // Ack payloads are dynamic payloads
     // Set the PA Level low to prevent power supply related issues since this is a
@@ -131,7 +131,7 @@ void setup()
     // Open a writing and reading pipe on each radio, with opposite addresses
     radio.setDataRate(RF24_250KBPS);
 //    radio.setAutoAck(1);                     // Ensure autoACK is enabled
-//    radio.setRetries(1,15);                  // Optionally, increase the delay between retries & # of retries
+    radio.setRetries(1,10);                  // Optionally, increase the delay between retries & # of retries
     printit(F("Checking the radio"));
     value = radio.getChannel();
     setcursor(0, 1);
@@ -154,7 +154,6 @@ void setup()
     ui.clear(); // display
     radio.startListening();                 // Start listening
     delay(100);
-    radio.stopListening();                                    // First, stop listening so we can talk.
 //    radio.writeAckPayload(1,&payload,32);          // Pre-load an ack-paylod into the FIFO buffer for pipe 1
     printit(F("Encrypted length:"));
     printit(result.length());
@@ -167,36 +166,38 @@ void setup()
     ui.clear();
 //    strncpy(data, plaintext.c_str(), 32);
     strncpy(data, "Turn it on", 32);
-    printit(F("Sending data"));
-    status = radio.write(&data,32);
-//    radio.txStandBy();               // Returns 0 if failed. 1 if success. Blocks only until MAX_RT timeout or success. Data flushed on fail.
-    setcursor(0, 1);
-    printit(F("Sent data maybe"));
-    setcursor(0, 2);
-    if ( status ){                         // Send the counter variable to the other radio
-            radio.startListening();                 // Start listening
-            unsigned long started_waiting_at = micros();               // Set up a timeout period, get the current microseconds
-            boolean timeout = false;                                   // Set up a variable to indicate if a response was received or not
-
-            while ( ! radio.available() ){                             // While nothing is received
-              if (micros() - started_waiting_at > 20000000 ){            // If waited longer than 200ms, indicate timeout and exit while loop
-                  timeout = true;
-                  break;
-              }
-            }
-
-            if ( timeout ){                                             // Describe the results
-                printit(F("Failed, response timed out."));
-            }else{
-                                                                        // Grab the response, compare, and send to debugging spew
-                radio.read( &gotChars, 32 );                  // Read it, and display the response time
-
-                printit(F("Got response: "));
-                setcursor(0, 3);
-                printit(gotChars);
-            }
-
-    }else{        printit(F("Sending failed.")); }          // If no ack response, sending failed
+    trdata();
+//    printit(F("Sending data"));
+//    status = radio.write(&data,32);
+////    radio.txStandBy();               // Returns 0 if failed. 1 if success. Blocks only until MAX_RT timeout or success. Data flushed on fail.
+//    setcursor(0, 1);
+//    printit(F("Sent data maybe"));
+//    setcursor(0, 2);
+//    if ( status ){                         // Send the counter variable to the other radio
+//            radio.startListening();                 // Start listening
+//            unsigned long started_waiting_at = micros();               // Set up a timeout period, get the current microseconds
+//            boolean timeout = false;                                   // Set up a variable to indicate if a response was received or not
+//
+//            while ( ! radio.available() ){                             // While nothing is received
+//              if (micros() - started_waiting_at > 20000000 ){            // If waited longer than 200ms, indicate timeout and exit while loop
+//                  timeout = true;
+//                  break;
+//              }
+//            }
+//
+//            if ( timeout ){                                             // Describe the results
+//                printit(F("Failed, response timed out."));
+//            }else{
+//                                                                        // Grab the response, compare, and send to debugging spew
+//                radio.read( &gotChars, 32 );                  // Read it, and display the response time
+//
+//                printit(F("Got response: "));
+//                setcursor(0, 3);
+//                printit(gotChars);
+//                alive = 1;
+//            }
+//
+//    }else{        printit(F("Sending failed.")); }          // If no ack response, sending failed
     sendnewline();
     radio.printDetails();
 skipradio:
@@ -244,7 +245,7 @@ skipradio:
     SoftPWMSet(led, 0);
 
     // Set fade time for pin 13 to 100 ms fade-up time, and 500 ms fade-down time
-    SoftPWMSetFadeTime(led, 300, 600);
+    SoftPWMSetFadeTime(led, 600, 600);
 #if USE_SERVO
     myservoa.attach(servopin1);  // attaches the servo on pin 9 to the servo object
     myservob.attach(servopin2);
@@ -268,6 +269,7 @@ int remember8 = 0;
 int remember9 = 0;
 int remember10 = 0;
 int remember11 = 0;
+int remember12 = 0;
 int sendit = 0;
 int gomouse = 0;
 int gokeyboard = 0;
@@ -285,16 +287,22 @@ int mousemove = 40;
 int mousebiginc = 100;
 int mousesmallinc = 5;
 int mousemext;
+int togglepower = 0;
+int blstate = 1;
 
 void setcursor(uint8_t col, uint8_t row)
 {
     ui.setCursor(col, row);
+    if (noecho == 0) {
     mySerial.println();
+    }
 }
 
 void sendnewline(void)
 {
+    if (noecho == 0) {
     mySerial.println();
+    }
 }
 
 void blinkLED(void)
@@ -312,6 +320,42 @@ void blinkLED(void)
     }
 }
 
+void trdata (void)
+{
+    radio.stopListening();                                    // First, stop listening so we can talk.
+    printit(F("Sending data"));
+    status = radio.write(&data,32);
+//    radio.txStandBy();               // Returns 0 if failed. 1 if success. Blocks only until MAX_RT timeout or success. Data flushed on fail.
+    setcursor(0, 1);
+    printit(F("Sent data maybe"));
+    setcursor(0, 2);
+    if ( status ){                         // Send the counter variable to the other radio
+            radio.startListening();                 // Start listening
+            unsigned long started_waiting_at = micros();               // Set up a timeout period, get the current microseconds
+            boolean timeout = false;                                   // Set up a variable to indicate if a response was received or not
+
+            while ( ! radio.available() ){                             // While nothing is received
+              if (micros() - started_waiting_at > 20000000 ){            // If waited longer than 200ms, indicate timeout and exit while loop
+                  timeout = true;
+                  break;
+              }
+            }
+
+            if ( timeout ){                                             // Describe the results
+                printit(F("Failed, response timed out."));
+            }else{
+                                                                        // Grab the response, compare, and send to debugging spew
+                radio.read( &gotChars, 32 );                  // Read it, and display the response time
+
+                printit(F("Got response: "));
+                setcursor(0, 3);
+                printit(gotChars);
+                alive = 1;
+            }
+
+    }else{        printit(F("Sending failed.")); }          // If no ack response, sending failed
+
+}
 void downcheck(byte k)
 {
     if (k == 128) {
@@ -378,6 +422,14 @@ void downcheck(byte k)
         rightshift = 1;
     }
 #endif
+#if USE_RF24
+    if (k == 54) {
+        remember12 = 1;
+    }
+    if (remember1 == 1 && remember2 == 1 && remember12 == 1) {
+        togglepower = 1;
+    }
+#endif // USE_MOUSE
 }
 
 void upcheck(byte k)
@@ -393,6 +445,10 @@ void upcheck(byte k)
     }
     if (remember1 == 0 && remember2 == 0 && remember3 == 0 && sendit == 1) {
         sendit = 0;
+        if (blstate == 0) {
+        ui.setBacklight(255);
+        blstate = 1;
+        }
         BootKeyboard.press(KEY_LEFT_CTRL);
         delay(100);
         BootKeyboard.press(KEY_LEFT_ALT);
@@ -407,22 +463,10 @@ void upcheck(byte k)
         printit(F("CTRL+ALT+DELETE"));
         sendnewline();
         RXLED0;
-        digitalWrite(keyled, 1);
+        for (a = 1; a <= 8; a++) {
+        digitalWrite(keyled, !digitalRead(keyled));
         delay(400);
-        digitalWrite(keyled, 0);
-        delay(400);
-        digitalWrite(keyled, 1);
-        delay(400);
-        digitalWrite(keyled, 0);
-        delay(400);
-        digitalWrite(keyled, 1);
-        delay(400);
-        digitalWrite(keyled, 0);
-        delay(400);
-        digitalWrite(keyled, 1);
-        delay(400);
-        digitalWrite(keyled, 0);
-        delay(400);
+        }
         return;
     }
 #if USE_MOUSE
@@ -560,13 +604,64 @@ void upcheck(byte k)
         rightshift = 0;
     }
 #endif
+#if USE_RF24
+    if (k == 54) {
+        remember12 = 0;
+    }
+    if (remember1 == 0 && remember2 == 0 && remember12 == 0 && togglepower == 1) {
+        togglepower = 0;
+        if (blstate == 0) {
+        ui.setBacklight(255);
+        blstate = 1;
+        }
+        ui.clear(); // display
+    if (alive == 1) {
+    strncpy(data, "Toggle the power relay!!", 32);
+    trdata();
+//    radio.stopListening();                                    // First, stop listening so we can talk.
+//    printit(F("Starting data send"));
+//    status = radio.write(&data,32);
+////    radio.txStandBy();               // Returns 0 if failed. 1 if success. Blocks only until MAX_RT timeout or success. Data flushed on fail.
+//    setcursor(0, 1);
+//    printit(F("Sent data maybe"));
+//    setcursor(0, 2);
+//    if ( status ){                         // Send the counter variable to the other radio
+//            radio.startListening();                 // Start listening
+//            unsigned long started_waiting_at = micros();               // Set up a timeout period, get the current microseconds
+//            boolean timeout = false;                                   // Set up a variable to indicate if a response was received or not
+//
+//            while ( ! radio.available() ){                             // While nothing is received
+//              if (micros() - started_waiting_at > 20000000 ){            // If waited longer than 200ms, indicate timeout and exit while loop
+//                  timeout = true;
+//                  break;
+//              }
+//            }
+//
+//            if ( timeout ){                                             // Describe the results
+//                printit(F("Failed, response timed out."));
+//            }else{
+//                                                                        // Grab the response, compare, and send to debugging spew
+//                radio.read( &gotChars, 32 );                  // Read it, and display the response time
+//
+//                printit(F("Got response: "));
+//                setcursor(0, 3);
+//                printit(gotChars);
+//            }
+//
+//    }else{        printit(F("Sending failed.")); }          // If no ack response, sending failed
+    }else{
+        printit(F("No radio link."));
+    }
+    }
+    sendnewline();
+ #endif
 }
 
 void printkey (void)
 {
 //	ui.lcd_mode(1); // dual ht
     ui.clear(); // display
-    printit(F("A:: Key: "));
+    printit(F("A: Key: "));
 }
 
 void loop()
@@ -575,9 +670,11 @@ void loop()
     if (mySerial.available()) {
         byte k = mySerial.read();
         itoa(k, text, 10);
+        if (neenable == 0) {
         mySerial.print(F("A:: "));
         mySerial.print(text);
         mySerial.println(F(" received"));
+        }
         if (k == 0) {
             press = 0;
         } else if (k == 1) {
@@ -586,14 +683,27 @@ void loop()
             //mySerial.write(k);
             if (press) {
                 if (mouse == 0 && servoadj == 0) {
+                    if (neenable == 1) {
+        if (blstate == 1) {
+        ui.setBacklight(0);
+        blstate =0;
+        }
+                        noecho = 1;
+                    }
                     printkey();
                     itoa(k, text, 10);
                     printit(String(text) + String(F(" Pressed")));
                     sendnewline();
                     BootKeyboard.press((KeyboardKeycode)pgm_read_byte(&keysims[k]));
+                    if (neenable == 1) {
+                        noecho = 0;
+                    }
                     //mySerial.println(" pressed");
                 } else if (servoadj == 1) {
 #if USE_SERVO
+                    if (neenable == 1) {
+                        noecho = 1;
+                    }
                     switch (k) {
                     case 218:
                         // move mouse up
@@ -670,9 +780,15 @@ void loop()
                         sendnewline();
                         break;
                     }
+                    if (neenable == 1) {
+                        noecho = 0;
+                    }
 #endif
                 } else {
 #if USE_MOUSE
+                    if (neenable == 1) {
+                        noecho = 1;
+                    }
                     mousemext = remember1 * (mousebiginc - mousemove) - remember4 * (mousemove - mousesmallinc);
                     ui.clear(); // display
                     switch (k) {
@@ -708,17 +824,26 @@ void loop()
                         break;
                     }
                     sendnewline();
+                    if (neenable == 1) {
+                        noecho = 0;
+                    }
 #endif // USE_MOUSE
                 }
                 downcheck(k);
 
             } else {
                 if (mouse == 0 && servoadj == 0) {
+                    if (neenable == 1) {
+                        noecho = 1;
+                    }
                     printkey();
                     itoa(k, text, 10);
                     printit(String(text) + String(F(" Released")));
                     sendnewline();
                     BootKeyboard.release((KeyboardKeycode)pgm_read_byte(&keysims[k]));
+                    if (neenable == 1) {
+                        noecho = 0;
+                    }
                 } else {
                 }
                 upcheck(k);

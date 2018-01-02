@@ -20,6 +20,7 @@ volatile int STOP=FALSE;
 
 void* reader_thread (void* fdin);
 int wait_flag=TRUE;                    /* TRUE while no signal received */
+pthread_mutex_t mutexsum;
 
 int i, res, count = sizeof(keysims)/sizeof(keysims[0]);
 unsigned char outcode;
@@ -51,12 +52,14 @@ void sendserial (int fd, unsigned char code, unsigned char pr)
 {
 		out[0] = pr;
 		out[1] = code;
-		res = write(fd,&out,2);
+   pthread_mutex_lock (&mutexsum);
+ 		res = write(fd,&out,2);
             if(res < 0 ) {
                 printf("Error Writing. Status=%d \n%s\n",errno, strerror(errno));
                 //close(fd);
             }
-}
+    pthread_mutex_unlock (&mutexsum);
+ }
 
 int main()
 {
@@ -70,6 +73,7 @@ int main()
     int fd,c;
     struct termios oldtio,newtio;
 
+    pthread_mutex_init(&mutexsum, NULL);
     fd = open(MODEMDEVICE, O_RDWR | O_NOCTTY | O_NDELAY);
     if (fd <0) {perror(MODEMDEVICE); exit(-1); }
 
@@ -147,6 +151,7 @@ int main()
     XCloseDisplay(display);
     STOP = TRUE;
     pthread_join(tid, NULL);
+    pthread_mutex_destroy(&mutexsum);
     tcsetattr(fd,TCSANOW,&oldtio);
 
     return 0;
@@ -173,6 +178,7 @@ void* reader_thread (void* fdin)
            		printf("Exiting thread\n");
            		break;
            } else if (retval > 0) {
+    pthread_mutex_lock (&mutexsum);
             res = read(fd,buf,255);
             if(res < 0 ) {
                 printf("Error Reading. Status=%d \n%s\n",errno, strerror(errno));
@@ -182,6 +188,7 @@ void* reader_thread (void* fdin)
 //		          printf("Data in from Arduino:\n");
 		            printf("%s", buf);
             }
+    pthread_mutex_unlock (&mutexsum);
           }
         }
     pthread_exit(0);
