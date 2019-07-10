@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
+#include <unistd.h>
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 #define CTRLD 	4
@@ -51,11 +52,12 @@ static int parse_image(const struct dirent *dir)
 void attach_storage(const char *name)
 {
 	system("modprobe -r g_mass_storage");
+	usleep(200000);
 point = strrchr(name,'.');
      if(strcmp(point,".image") == 0) {
-        sprintf( command, "modprobe g_mass_storage \"file=%s\" stall=0 iManufacturer='MacPCZone'", name);
+        sprintf( command, "modprobe g_mass_storage \"file=%s\" stall=0 iManufacturer='Mac PC Zone' iProduct='MPZ USB Gadget'", name);
 	} else {
-  	sprintf( command, "modprobe g_mass_storage \"file=%s\" ro=1 cdrom=1 iManufacturer='MacPCZone'", name);
+  	sprintf( command, "modprobe g_mass_storage \"file=%s\" ro=1 cdrom=1 iManufacturer='Mac PC Zone' iProduct='MPZ USB Gadget'", name);
 }
 system(command);
 }
@@ -121,8 +123,8 @@ int main()
 	set_menu_grey(my_menu, COLOR_PAIR(3));
 
 	/* Post the menu */
-	mvprintw(LINES - 3, 0, " Press <ENTER> to see the option selected");
-	mvprintw(LINES - 2, 0, " Up and Down arrow keys to naviage (F1 to Exit)");
+	mvprintw(LINES - 3, 0, " Press <ENTER> to select the file to attach");
+	mvprintw(LINES - 2, 0, " Up and Down arrow keys to navigate (F1 to Exit)");
 	post_menu(my_menu);
 	refresh();
 

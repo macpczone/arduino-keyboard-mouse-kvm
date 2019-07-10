@@ -31,7 +31,7 @@ void dumpkeys (Display *display)
 		KeyCode a;
 		for (a = 0; a <= 255; a++) {
 				printf( "Key Code number: %d ,", a );
-        printf( "KeySymbol: %s,\n", XKeysymToString(XKeycodeToKeysym(display, a, 0)));
+        printf( "KeySymbol: %s,\n", XKeysymToString(XkbKeycodeToKeysym(display, a, 0, 0)));
     }
 }
 
@@ -66,6 +66,7 @@ int main()
     Display *display;
     Window window;
     XEvent event;
+    Bool ar_set, ar_supp;
     int s;
     pthread_t tid;
     pthread_attr_t attr;
@@ -112,7 +113,7 @@ int main()
 
     /* map (show) the window */
     XMapWindow(display, window);
-
+    XAutoRepeatOff(display);
     /* event loop */
     while (1)
     {
@@ -122,7 +123,7 @@ int main()
         if (event.type == KeyPress)
         {
             printf( "KeyPress: %d ", event.xkey.keycode );
-            printf( "KeySymbol: %s\n", XKeysymToString(XKeycodeToKeysym(display, event.xkey.keycode, 0)));
+            printf( "KeySymbol: %s\n", XKeysymToString(XkbKeycodeToKeysym(display, event.xkey.keycode, 0, 0)));
             outcode = getkeycode(event.xkey.keycode);
             if (outcode) {
             		printf( "Output Keycode: %d\n\n", outcode );
@@ -153,7 +154,7 @@ int main()
     pthread_join(tid, NULL);
     pthread_mutex_destroy(&mutexsum);
     tcsetattr(fd,TCSANOW,&oldtio);
-
+    XAutoRepeatOn(display);
     return 0;
 }
 

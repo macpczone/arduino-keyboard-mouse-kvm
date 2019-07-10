@@ -861,7 +861,7 @@
 	"Wire.cpp"
 	"twi.c"
 
-1514428925 source:/root/Projects/Arduino-Keyboard-Mouse/sketch.cpp
+1514757458 source:/root/Projects/Arduino-Keyboard-Mouse/sketch.cpp
 	<Arduino.h>
 	<SoftwareSerial.h>
 	"HID-Project.h"
@@ -873,8 +873,10 @@
 	<EEPROM.h>
 	<keysims.h>
 	<SPI.h>
+	<nRF24L01.h>
 	"RF24.h"
 	"xxtea-iot-crypt.h"
+	<printf.h>
 	"printit.h"
 
 1485516394 /root/Projects/avr-libs/HID/src/HID-Project.h
@@ -1013,12 +1015,12 @@
 
 1507760222 /root/Projects/Arduino-Keyboard-Mouse/keysims.h
 
-1509515006 /root/Projects/avr-libs/rf24/RF24.h
+1517183898 /root/Projects/avr-libs/rf24/RF24.h
 	"RF24_config.h"
 	"utility/includes.h"
 	<DigitalIO.h>
 
-1471036775 /root/Projects/avr-libs/rf24/RF24_config.h
+1517183898 /root/Projects/avr-libs/rf24/RF24_config.h
 	"utility/ATXMegaD3/RF24_arch_config.h"
 	"utility/includes.h"
 	"utility/ATTiny/RF24_arch_config.h"
@@ -1030,18 +1032,20 @@
 	<stdint.h>
 	<stdio.h>
 	<string.h>
+	<SPI_UART.h>
 	<SPI.h>
+	<pgmspace.h>
 	<avr/pgmspace.h>
 
 1460627255 /root/Projects/avr-libs/aes/AESLib.h
 	<stdint.h>
 
-1509514886 source:/root/Projects/avr-libs/rf24/RF24.cpp
+1517183898 source:/root/Projects/avr-libs/rf24/RF24.cpp
 	"nRF24L01.h"
 	"RF24_config.h"
 	"RF24.h"
 
-1471036775 /root/Projects/avr-libs/rf24/nRF24L01.h
+1517183898 /root/Projects/avr-libs/rf24/nRF24L01.h
 
 1460627255 /root/Projects/avr-libs/AESLib/AESLib.h
 	<stdint.h>
@@ -1169,5 +1173,7 @@
 1457108981 source:/root/Projects/avr-libs/xxtea-iot/core/xxtea_core.cpp
 	"xxtea_internal.h"
 
-1514381299 /root/Projects/Arduino-Keyboard-Mouse/printit.h
+1514683943 /root/Projects/Arduino-Keyboard-Mouse/printit.h
+
+1517183898 /root/Projects/avr-libs/rf24/printf.h
 
