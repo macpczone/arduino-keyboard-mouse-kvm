@@ -30,4 +30,4 @@ The utils directory also contains some other code that I have written, which are
 
 Here is an image of the how the Pro Micro is connected:
 
-![Circuit](http://www.macpczone.co.uk/sites/default/files/styles/page_800/public/top_images/arduino_kvm_bb.png)
+![Circuit](http://www.macpczone.co.uk/sites/default/files/styles/page_800/public/top_images/arduino_kvm_bb_0.png)
